@@ -13,7 +13,8 @@ div#main {
 	border-radius: 0.8em;
 	border: .05em solid #DDD;
 	background-color: white;
-	font-size: 1.5em;
+	font-size: 1.2em;
+	left: -3em;
 }
 
 div#title {
@@ -30,6 +31,20 @@ div.post-title {
 	color: #7A5;
 }
 
+a:link, a:visited{
+	color: #588;
+	text-decoration: none;
+}
+
+a:hover { color: #7AA; }
+a:active { color: #7FA; }
+
+
+img[alt="floatright"] { float:right; }
+
+img[alt="floatleft"] { float:left; }
+
+
 h1, h2, h3, h4, h5, h6 { font-family: 'Voltaire'; }
 
 h1 { font-size: 1.5em; }
@@ -45,7 +60,14 @@ div#content {
 }
 
 div#posts {
-
+	width: 13em;
+	position: absolute;
+	bottom: 10em;
+	right: -13em;
+	border: .1em solid #DDD;
+	background-color: white;
+	border-radius: 0 1em 1em 0;
+	font-size: .65em;
 }
 
 
