@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>{{ page.title }} - </title>
+	<title>{{ page.title }} - Blog Title</title>
 	<link href="/css/blog.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 	<div id = 'main'>
-		<div id = 'title'></div>
+		<div id = 'title'>Blog Title</div>
 		<div id = "content">
 			{{ content }}
 		</div>
 
 		<div id="posts">
+			Recent posts
 			<ul>
 				{% for post in site.posts limit:10 %}
 				<li>
