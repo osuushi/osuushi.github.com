@@ -2,21 +2,24 @@
 <html>
 <head>
 	<title>{{ page.title }} - </title>
+	<link href="/css/blog.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
-	<div id = 'title'></div>
-	<div id = "content">
-		{{ content }}
-	</div>
+	<div id = 'main'>
+		<div id = 'title'></div>
+		<div id = "content">
+			{{ content }}
+		</div>
 
-	<div id="posts">
-		<ul>
-			{% for post in site.posts limit:10 %}
-			<li>
-				<a href="{{ post.url }}"> {{ post.title }}</a>
-			</li>
-			{% endfor %}
-		</ul>
+		<div id="posts">
+			<ul>
+				{% for post in site.posts limit:10 %}
+				<li>
+					<a href="{{ post.url }}"> {{ post.title }}</a>
+				</li>
+				{% endfor %}
+			</ul>
+		</div>
 	</div>
 </body>
 </html>
