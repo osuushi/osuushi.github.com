@@ -2,5 +2,5 @@
 layout: default
 ---
 <div class="post-title">{{ page.title }}</div>
-<div class="post-date">{{ post.date }}</div>
+<div class="post-date">{{ post.date | date_to_string }}</div>
 <div class="post">{{ content }} </div>

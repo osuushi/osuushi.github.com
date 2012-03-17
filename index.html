@@ -4,4 +4,5 @@ title: blog
 ---
 {% assign post = site.posts.first %}
 <div class="post-title">{{ post.title }}</div>
+<div class="post-date">{{ post.date | date_to_string}}</div>
 <div class="post">{{ post.content }} </div>
