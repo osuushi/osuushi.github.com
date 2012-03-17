@@ -3,10 +3,11 @@
 body {
 	background-color: #EEE;
 	font-family: "Questrial";
-	color: #352;
+	color: #241;
 }
 
 div#main {
+	position:relative;
 	width: 35em;
 	padding: 1em;
 	margin: 0 auto;
@@ -32,7 +33,7 @@ div.post-title {
 }
 
 a:link, a:visited{
-	color: #588;
+	color: #5AA;
 	text-decoration: none;
 }
 
@@ -40,9 +41,17 @@ a:hover { color: #7AA; }
 a:active { color: #7FA; }
 
 
-img[alt="floatright"] { float:right; }
+img[alt="floatright"] { 
+	float:right;
+	margin: .5em;
+	margin-right: 0;
+}
 
-img[alt="floatleft"] { float:left; }
+img[alt="floatleft"] { 
+	float:left; 
+	margin: .5em;
+	margin-left: 0;
+}
 
 
 h1, h2, h3, h4, h5, h6 { font-family: 'Voltaire'; }
