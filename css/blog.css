@@ -3,34 +3,51 @@
 body {
 	background-color: #EEE;
 	font-family: "Questrial";
-	font-size: 1.5em;
 	color: #352;
 }
 
 div#main {
-	width: 60em;
+	width: 35em;
+	padding
 	margin: 0 auto;
-	border-radius: 0.3em;
+	border-radius: 0.8em;
 	border: .05em solid #DDD;
 	background-color: white;
+	font-size: 1.5em;
 }
 
 div#title {
 	font-family: 'Voltaire';
 	font-size: 3em;
-}
-
-div#content {
-	
-}
-
-div#posts {
-	
+	margin-bottom: .2em;
+	color: #583;
+	text-align:center;
 }
 
 div.post-title {
+	font-family: 'Voltaire';
+	font-size: 1.8em;
+	color: #7A5;
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: 'Voltaire'; }
+
+h1 { font-size: 1.5em; }
+h2 { font-size: 1.3em; }
+h3 { font-size: 1.2em; }
+h4 { font-size: 1.15em; }
+h5 { font-size: 1.075em; }
+h6 { font-size: 1em; }
+
+
+div#content {
 
 }
+
+div#posts {
+
+}
+
 
 div.post {
 
