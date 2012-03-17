@@ -8,7 +8,7 @@ body {
 
 div#main {
 	width: 35em;
-	padding
+	padding: 1em;
 	margin: 0 auto;
 	border-radius: 0.8em;
 	border: .05em solid #DDD;
