@@ -1,0 +1,25 @@
+div#plot-box {
+	position:relative;
+	width:600px;
+	height:500px;
+	border: 1px solid black;
+	padding: 0;
+	overflow: hidden;
+}
+
+div#config-box {
+	position:relative;
+	width:600px;
+	border: 1px solid black
+}
+
+/* Point handle */
+div.handle {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	border-radius: 10px;
+	background-color: #DDD;
+	border: 1px solid #333;
+	opacity: 0.8;
+}
