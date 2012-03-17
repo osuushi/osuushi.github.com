@@ -54,7 +54,11 @@ img[alt="floatleft"] {
 }
 
 
-h1, h2, h3, h4, h5, h6 { font-family: 'Voltaire'; }
+h1, h2, h3, h4, h5, h6 { 
+	font-family: 'Voltaire'; 
+	font-weight: normal;
+	margin-top: 1.5em;
+}
 
 h1 { font-size: 1.5em; }
 h2 { font-size: 1.3em; }
