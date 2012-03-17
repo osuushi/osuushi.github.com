@@ -21,15 +21,21 @@ div#main {
 div#title {
 	font-family: 'Voltaire';
 	font-size: 3em;
-	margin-bottom: .2em;
+	margin-bottom: .75em;
 	color: #583;
 	text-align:center;
+}
+
+div#date {
+	font-size:.8em;
+	color:black;
 }
 
 div.post-title {
 	font-family: 'Voltaire';
 	font-size: 1.8em;
 	color: #7A5;
+	margin-bottom: 1em;
 }
 
 a:link, a:visited{
