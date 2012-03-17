@@ -26,7 +26,7 @@ div#title {
 	text-align:center;
 }
 
-div#date {
+div#post-date {
 	font-size:.8em;
 	color:black;
 }
@@ -35,7 +35,6 @@ div.post-title {
 	font-family: 'Voltaire';
 	font-size: 1.8em;
 	color: #7A5;
-	margin-bottom: 1em;
 }
 
 a:link, a:visited{
