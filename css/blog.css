@@ -12,7 +12,7 @@ div#main {
 	padding: 1em;
 	margin: 0 auto;
 	border-radius: 0.8em;
-	border: .05em solid #DDD;
+	border: 1px solid #DDD;
 	background-color: white;
 	font-size: 1.2em;
 	left: -3em;
@@ -73,7 +73,7 @@ div#posts {
 	position: absolute;
 	bottom: 10em;
 	right: -13em;
-	border: .1em solid #DDD;
+	border: 1px solid #DDD;
 	background-color: white;
 	border-radius: 0 1em 1em 0;
 	font-size: .65em;
@@ -82,4 +82,14 @@ div#posts {
 
 div.post {
 
+}
+
+code {
+	white-space: pre;
+	padding: .5em;
+	border: 1px dashed #CCC;
+	background-color: white;
+	color: black;
+	display: inline-block;
+	border-radius: .75em;
 }
