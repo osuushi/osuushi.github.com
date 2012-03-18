@@ -14,7 +14,7 @@ $ ->
 
 	#Create the canvas
 	canvas = $("<canvas width=600 height=500 />").appendTo(plotBox)
-	canvas.css zIndex: 2
+	canvas.css
 	cx = canvas[0].getContext '2d' #get the canvas context
 
 	#Create the hidden hit test canvas
@@ -50,12 +50,13 @@ $ ->
 	updateConfigBox();
 	redraw();
 
-getPointHandles = -> plotBox.children 'div.handle'
+getHandles = -> plotBox.children 'div.handle'
 
-getPoints = ->
-	for handle in getPointHandles()
-		{top, left} = $(handle).position()
-		[left + 6, top + 6]
+getHandlePoint = (handle) ->
+	{top, left} = $(handle).position()
+	[left + 6, top + 6]
+
+getPoints = -> (getHandlePoint handle for handle in getHandles())
 
 
 makePointHandle = (x, y) ->
@@ -71,6 +72,8 @@ makePointHandle = (x, y) ->
 
 	return handle
 
+distance = (a,b) -> Math.sqrt Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2)
+
 plotBoxDoubleClick = (ev) ->
 	#Translate location of click to local coordinates
 	offset = plotBox.offset()
@@ -80,13 +83,21 @@ plotBoxDoubleClick = (ev) ->
 	#Find the index of the point starting the clicked segment
 	index = hitTest x, y
 	
-	beforeHandle = getPointHandles()[index] if index?
+	beforeHandle = getHandles()[index] if index?
 
 	#Add a new handle
 	newHandle = makePointHandle x, y
 
 	#move new handle if needed
-	newHandle.insertAfter $(beforeHandle) if beforeHandle?
+	if beforeHandle?
+		newHandle.insertAfter $(beforeHandle)
+	else		
+		#If not adding to a segment, see if we're closer to star or end to decide where to add the point
+		[first, middle..., last, newPoint] = getPoints()
+		#Move before first if nearer first than last
+		newHandle.insertBefore $(getHandles()[0]) if distance(first, newPoint) < distance(last, newPoint)
+
+
 
 	redraw()
 	return false
@@ -140,22 +151,28 @@ drawSmoothCurve = (context, color, lineWidth = 2, segmentIndex) ->
 
 	#Create the smooth function
 	s = Smooth points, getSmoothConfig()
-	#Draw lines between points
-	context.moveTo s(0)...
+
+
+	if segmentIndex?
+		context.moveTo s(segmentIndex)...
+	else
+		context.moveTo s(0)...
 
 	lastIndex = points.length - 1
 	lastIndex++ if selectedClip() is 'periodic'
 	
 	for i in [0...lastIndex]
 		if segmentIndex? then continue if i isnt segmentIndex
-		#compute reasonable delta
+		#compute reasonably smooth delta
+
+		#Approximate length of line by measuring end points to mid point
 		start = s i
 		mid = s 0.5
 		end = s i+1
-		dist = Math.sqrt Math.pow(start[0] - mid[0], 2) + Math.pow(start[1] - mid[1], 2)
-		dist += Math.sqrt Math.pow(mid[0] - end[0], 2) + Math.pow(mid[1] - end[1], 2)
-		delta = 10/dist
-		context.lineTo s(i + t)... for t in [0..1] by delta
+		dist = distance(start, mid) + distance(mid, end)
+		averageSegmentLength = 10
+		dt = averageSegmentLength/dist
+		context.lineTo s(i + t)... for t in [0..1] by dt
 		context.lineTo s(i+1)...
 	context.lineJoin = 'round'
 	context.lineWidth = lineWidth
@@ -172,5 +189,5 @@ hitTest = (x, y) ->
 		#Draw the curve
 		drawSmoothCurve hit_cx, "#FFFFFF", 10, i
 		#Check the pixel
-		return i if hit_cx.getImageData(x, y, 1, 1).data[0]
+		return i if hit_cx.getImageData(x, y, 1, 1).data[3] is 255
 	return undefined

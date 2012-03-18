@@ -1,5 +1,6 @@
 (function() {
-  var canvas, changeCubicSlider, changeLanczosSlider, cubicTension, cx, drawSmoothCurve, getPointHandles, getPoints, getSmoothConfig, handleDoubleClick, hitTest, hit_cx, lanczosFilterSize, makePointHandle, plotBox, plotBoxDoubleClick, redraw, selectedClip, selectedMethod, updateConfigBox;
+  var canvas, changeCubicSlider, changeLanczosSlider, cubicTension, cx, distance, drawSmoothCurve, getHandlePoint, getHandles, getPoints, getSmoothConfig, handleDoubleClick, hitTest, hit_cx, lanczosFilterSize, makePointHandle, plotBox, plotBoxDoubleClick, redraw, selectedClip, selectedMethod, updateConfigBox,
+    __slice = Array.prototype.slice;
 
   plotBox = null;
 
@@ -17,9 +18,7 @@
     var hit_canvas;
     plotBox = $('#plot-box');
     canvas = $("<canvas width=600 height=500 />").appendTo(plotBox);
-    canvas.css({
-      zIndex: 2
-    });
+    canvas.css;
     cx = canvas[0].getContext('2d');
     hit_canvas = $("<canvas width=600 height=500 />").appendTo(plotBox).css({
       opacity: 0,
@@ -62,18 +61,23 @@
     return redraw();
   });
 
-  getPointHandles = function() {
+  getHandles = function() {
     return plotBox.children('div.handle');
   };
 
+  getHandlePoint = function(handle) {
+    var left, top, _ref;
+    _ref = $(handle).position(), top = _ref.top, left = _ref.left;
+    return [left + 6, top + 6];
+  };
+
   getPoints = function() {
-    var handle, left, top, _i, _len, _ref, _ref2, _results;
-    _ref = getPointHandles();
+    var handle, _i, _len, _ref, _results;
+    _ref = getHandles();
     _results = [];
     for (_i = 0, _len = _ref.length; _i < _len; _i++) {
       handle = _ref[_i];
-      _ref2 = $(handle).position(), top = _ref2.top, left = _ref2.left;
-      _results.push([left + 6, top + 6]);
+      _results.push(getHandlePoint(handle));
     }
     return _results;
   };
@@ -95,15 +99,26 @@
     return handle;
   };
 
+  distance = function(a, b) {
+    return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
+  };
+
   plotBoxDoubleClick = function(ev) {
-    var beforeHandle, index, newHandle, offset, x, y;
+    var beforeHandle, first, index, last, middle, newHandle, newPoint, offset, x, y, _i, _ref;
     offset = plotBox.offset();
     x = ev.pageX - offset.left;
     y = ev.pageY - offset.top;
     index = hitTest(x, y);
-    if (index != null) beforeHandle = getPointHandles()[index];
+    if (index != null) beforeHandle = getHandles()[index];
     newHandle = makePointHandle(x, y);
-    if (beforeHandle != null) newHandle.insertAfter($(beforeHandle));
+    if (beforeHandle != null) {
+      newHandle.insertAfter($(beforeHandle));
+    } else {
+      _ref = getPoints(), first = _ref[0], middle = 4 <= _ref.length ? __slice.call(_ref, 1, _i = _ref.length - 2) : (_i = 1, []), last = _ref[_i++], newPoint = _ref[_i++];
+      if (distance(first, newPoint) < distance(last, newPoint)) {
+        newHandle.insertBefore($(getHandles()[0]));
+      }
+    }
     redraw();
     return false;
   };
@@ -157,14 +172,18 @@
   };
 
   drawSmoothCurve = function(context, color, lineWidth, segmentIndex) {
-    var delta, dist, end, i, lastIndex, mid, points, s, start, t;
+    var averageSegmentLength, dist, dt, end, i, lastIndex, mid, points, s, start, t;
     if (lineWidth == null) lineWidth = 2;
     context.clearRect(0, 0, canvas.width(), canvas.height());
     points = getPoints();
     if (!(points.length > 1)) return;
     context.beginPath();
     s = Smooth(points, getSmoothConfig());
-    context.moveTo.apply(context, s(0));
+    if (segmentIndex != null) {
+      context.moveTo.apply(context, s(segmentIndex));
+    } else {
+      context.moveTo.apply(context, s(0));
+    }
     lastIndex = points.length - 1;
     if (selectedClip() === 'periodic') lastIndex++;
     for (i = 0; 0 <= lastIndex ? i < lastIndex : i > lastIndex; 0 <= lastIndex ? i++ : i--) {
@@ -172,10 +191,10 @@
       start = s(i);
       mid = s(0.5);
       end = s(i + 1);
-      dist = Math.sqrt(Math.pow(start[0] - mid[0], 2) + Math.pow(start[1] - mid[1], 2));
-      dist += Math.sqrt(Math.pow(mid[0] - end[0], 2) + Math.pow(mid[1] - end[1], 2));
-      delta = 10 / dist;
-      for (t = 0; t <= 1; t += delta) {
+      dist = distance(start, mid) + distance(mid, end);
+      averageSegmentLength = 10;
+      dt = averageSegmentLength / dist;
+      for (t = 0; t <= 1; t += dt) {
         context.lineTo.apply(context, s(i + t));
       }
       context.lineTo.apply(context, s(i + 1));
@@ -194,7 +213,7 @@
     var i, _ref;
     for (i = 0, _ref = getPoints().length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
       drawSmoothCurve(hit_cx, "#FFFFFF", 10, i);
-      if (hit_cx.getImageData(x, y, 1, 1).data[0]) return i;
+      if (hit_cx.getImageData(x, y, 1, 1).data[3] === 255) return i;
     }
   };
 
