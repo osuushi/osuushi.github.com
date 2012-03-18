@@ -12,8 +12,14 @@ $ ->
 	plotBox.dblclick plotBoxDoubleClick #bind double click
 
 	makePointHandle 50, 30
+	makePointHandle 200, 80
 	makePointHandle 400, 100
-	makePointHandle 70, 400
+	makePointHandle 380, 200
+	makePointHandle 180, 200
+	makePointHandle 60, 300
+	makePointHandle 120, 400
+	makePointHandle 300, 300
+	makePointHandle 400, 350
 
 	#Set up sliders
 	$("#tension-slider").slider 
