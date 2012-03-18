@@ -14,9 +14,9 @@ div.handle {
 	width: 10px;
 	height: 10px;
 	border-radius: 10px;
-	background-color: #DDD;
+	background-color: rgba(0,255,0,.2);
 	border: 1px solid #333;
-	opacity: 0.8;
+	opacity: 1;
 }
 
 
