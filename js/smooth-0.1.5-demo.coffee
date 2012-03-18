@@ -116,7 +116,7 @@ redraw = ->
 	#Create the smooth function
 	s = Smooth points, getSmoothConfig()
 	#Draw lines between points
-	cx.moveTo s 0
+	cx.moveTo s(0)...
 
 	lastIndex = points.length - 1
 	lastIndex++ if selectedClip() is 'periodic'

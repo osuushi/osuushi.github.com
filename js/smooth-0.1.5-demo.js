@@ -145,7 +145,7 @@
     points = getPoints();
     cx.beginPath();
     s = Smooth(points, getSmoothConfig());
-    cx.moveTo(s(0));
+    cx.moveTo.apply(cx, s(0));
     lastIndex = points.length - 1;
     if (selectedClip() === 'periodic') lastIndex++;
     for (i = 0; 0 <= lastIndex ? i < lastIndex : i > lastIndex; 0 <= lastIndex ? i++ : i--) {
