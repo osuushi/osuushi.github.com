@@ -7,7 +7,7 @@ lanczosFilterSize = 2
 
 $ ->
 	plotBox = $ '#plot-box' # get the plot box div
-	canvas = $("<canvas width=#{plotBox.width()} height=#{plotBox.height()}/>").appendTo(plotBox)
+	canvas = $("<canvas width=600 height=500 />").appendTo(plotBox)
 	cx = canvas[0].getContext '2d'
 	plotBox.dblclick plotBoxDoubleClick #bind double click
 
