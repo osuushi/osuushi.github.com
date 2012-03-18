@@ -55,6 +55,14 @@
 		<a href = "https://github.com/osuushi/osuushi.github.com/blob/master/js/smooth-0.1.5-demo.coffee">
 			here
 		</a>.
+		The meat of the actual curve drawing is in the <code>addCurveSegment</code> function, which samples
+		the output of Smooth.js to create line segments approximating the function.
+		<br><br>
+		Nearest neighbor interpolation isn't included because the results in this case would look identical
+		to linear interpolation. This is because nearest neighbor is discontinuous, and the discontinuities
+		would be spanned by line segments.<br><br>
+		Windowed sinc interpolation is not included because I felt that adding a text field to let you enter
+		a window function was a little out of scope for a simple demo.
 		<br><br>
 		<small>
 			(This is tested in the latest Chrome, FireFox and Safari.<br>

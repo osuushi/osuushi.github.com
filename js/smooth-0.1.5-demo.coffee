@@ -167,7 +167,7 @@ addCurveSegment = (context, i, cachedPoints) ->
 	#To ameliorate this, we divide the segment into a few pieces and compute a different increment for
 	#each piece to approximate the advancement distance we want.
 
-	pieceCount = 2 #should be a power of two so the floating point math comes out exact
+	pieceCount = 2 #should be a power of two so the for loop comes out exact
 	for t in [0...1] by 1/pieceCount
 		[start, end] = [s(i + t), s(i + t + 1/pieceCount)]
 		pieceLength = distance start, end
