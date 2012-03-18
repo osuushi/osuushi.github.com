@@ -1,6 +1,7 @@
 (function() {
-  var canvas, changeCubicSlider, changeLanczosSlider, cubicTension, cx, distance, drawSmoothCurve, getHandlePoint, getHandles, getPoints, getSmoothConfig, handleDoubleClick, hitTest, hit_cx, lanczosFilterSize, makePointHandle, plotBox, plotBoxDoubleClick, redraw, selectedClip, selectedMethod, updateConfigBox,
-    __slice = Array.prototype.slice;
+  var addCurveSegment, canvas, changeCubicSlider, changeLanczosSlider, cx, distance, getHandlePoint, getHandles, getPoints, handleDoubleClick, hitTest, hit_cx, makeHandle, plotBox, plotBoxDoubleClick, redraw, smoothConfig, updateConfigBox,
+    __slice = Array.prototype.slice,
+    __hasProp = Object.prototype.hasOwnProperty;
 
   plotBox = null;
 
@@ -10,37 +11,41 @@
 
   hit_cx = null;
 
-  cubicTension = 0;
+  smoothConfig = {
+    method: 'lanczos',
+    clip: 'clamp',
+    lanczosFilterSize: 2,
+    cubicTension: 0
+  };
 
-  lanczosFilterSize = 2;
+  distance = function(a, b) {
+    return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
+  };
 
   $(function() {
-    var hit_canvas;
     plotBox = $('#plot-box');
     canvas = $("<canvas width=600 height=500 />").appendTo(plotBox);
-    canvas.css;
     cx = canvas[0].getContext('2d');
-    hit_canvas = $("<canvas width=600 height=500 />").appendTo(plotBox).css({
-      opacity: 0,
-      position: 'absolute',
-      top: 0,
-      left: 0
-    });
-    hit_cx = hit_canvas[0].getContext('2d');
+    hit_cx = $("<canvas width=600 height=500 />").css({
+      display: 'none'
+    }).appendTo(plotBox)[0].getContext('2d');
     plotBox.dblclick(plotBoxDoubleClick);
-    makePointHandle(50, 30);
-    makePointHandle(200, 80);
-    makePointHandle(400, 100);
-    makePointHandle(380, 200);
-    makePointHandle(180, 200);
-    makePointHandle(60, 300);
-    makePointHandle(120, 400);
-    makePointHandle(300, 300);
-    makePointHandle(400, 350);
+    makeHandle(50, 30);
+    makeHandle(200, 80);
+    makeHandle(400, 100);
+    makeHandle(380, 200);
+    makeHandle(180, 200);
+    makeHandle(60, 300);
+    makeHandle(120, 400);
+    makeHandle(300, 300);
+    makeHandle(400, 350);
+    /*Set up UI elements
+    */
     $("#tension-slider").slider({
       min: 0,
       max: 1,
       step: .1,
+      value: smoothConfig.cubicTension,
       slide: changeCubicSlider,
       change: changeCubicSlider
     });
@@ -48,15 +53,19 @@
       min: 2,
       max: 10,
       step: 1,
-      value: 2,
+      value: smoothConfig.lanczosFilterSize,
       slide: changeLanczosSlider,
       change: changeLanczosSlider
     });
     $('#method').change(function() {
+      smoothConfig.method = $('#method option:selected').val();
       updateConfigBox();
       return redraw();
     });
-    $('#clip').change(redraw);
+    $('#clip').change(function() {
+      smoothConfig.clip = $('#clip option:selected').val();
+      return redraw();
+    });
     updateConfigBox();
     return redraw();
   });
@@ -82,7 +91,7 @@
     return _results;
   };
 
-  makePointHandle = function(x, y) {
+  makeHandle = function(x, y) {
     var handle;
     handle = $('<div/>').addClass('handle').appendTo(plotBox).css({
       left: x - 6,
@@ -93,28 +102,23 @@
       stop: redraw
     });
     handle.dblclick(function(ev) {
-      handleDoubleClick(handle);
-      return false;
+      return handleDoubleClick(handle);
     });
     return handle;
   };
 
-  distance = function(a, b) {
-    return Math.sqrt(Math.pow(a[0] - b[0], 2) + Math.pow(a[1] - b[1], 2));
-  };
-
   plotBoxDoubleClick = function(ev) {
-    var beforeHandle, first, index, last, middle, newHandle, newPoint, offset, x, y, _i, _ref;
+    /* Add a new handle at the clicked location
+    */
+    var first, last, middle, newHandle, newPoint, offset, segmentStartHandle, x, y, _i, _ref, _ref2;
     offset = plotBox.offset();
-    x = ev.pageX - offset.left;
-    y = ev.pageY - offset.top;
-    index = hitTest(x, y);
-    if (index != null) beforeHandle = getHandles()[index];
-    newHandle = makePointHandle(x, y);
-    if (beforeHandle != null) {
-      newHandle.insertAfter($(beforeHandle));
+    _ref = [ev.pageX - offset.left, ev.pageY - offset.top], x = _ref[0], y = _ref[1];
+    segmentStartHandle = getHandles()[hitTest(x, y)];
+    newHandle = makeHandle(x, y);
+    if (segmentStartHandle != null) {
+      newHandle.insertAfter($(segmentStartHandle));
     } else {
-      _ref = getPoints(), first = _ref[0], middle = 4 <= _ref.length ? __slice.call(_ref, 1, _i = _ref.length - 2) : (_i = 1, []), last = _ref[_i++], newPoint = _ref[_i++];
+      _ref2 = getPoints(), first = _ref2[0], middle = 4 <= _ref2.length ? __slice.call(_ref2, 1, _i = _ref2.length - 2) : (_i = 1, []), last = _ref2[_i++], newPoint = _ref2[_i++];
       if (distance(first, newPoint) < distance(last, newPoint)) {
         newHandle.insertBefore($(getHandles()[0]));
       }
@@ -125,94 +129,82 @@
 
   handleDoubleClick = function(handle) {
     handle.remove();
-    return redraw();
-  };
-
-  selectedMethod = function() {
-    return $('#method option:selected').val();
-  };
-
-  selectedClip = function() {
-    return $('#clip option:selected').val();
+    redraw();
+    return false;
   };
 
   updateConfigBox = function() {
-    var method;
-    method = selectedMethod();
     $('div.method-config').hide();
-    return $("div#" + method + "-config").show();
+    return $("div#" + smoothConfig.method + "-config").show();
   };
 
   changeLanczosSlider = function(ev, ui) {
-    lanczosFilterSize = ui.value;
-    $("#lanczosfiltersize").text(lanczosFilterSize);
+    smoothConfig.lanczosFilterSize = ui.value;
+    $("#lanczosfiltersize").text(smoothConfig.lanczosFilterSize);
     return redraw();
   };
 
   changeCubicSlider = function(ev, ui) {
-    cubicTension = ui.value;
-    $("#cubictension").text(cubicTension.toFixed(1));
+    smoothConfig.cubicTension = ui.value;
+    $("#cubictension").text(smoothConfig.cubicTension.toFixed(1));
     return redraw();
   };
 
-  getSmoothConfig = function() {
-    var config;
-    config = {
-      method: selectedMethod(),
-      clip: selectedClip()
-    };
-    switch (config.method) {
-      case 'cubic':
-        config.cubicTension = cubicTension;
-        break;
-      case 'lanczos':
-        config.lanczosFilterSize = lanczosFilterSize;
+  addCurveSegment = function(context, i, cachedPoints) {
+    var averageLineLength, config, dt, end, k, mid, points, s, segmentLength, start, t, v, _ref;
+    points = cachedPoints != null ? cachedPoints : getPoints();
+    config = {};
+    for (k in smoothConfig) {
+      if (!__hasProp.call(smoothConfig, k)) continue;
+      v = smoothConfig[k];
+      config[k] = v;
     }
-    return config;
-  };
-
-  drawSmoothCurve = function(context, color, lineWidth, segmentIndex) {
-    var averageSegmentLength, dist, dt, end, i, lastIndex, mid, points, s, start, t;
-    if (lineWidth == null) lineWidth = 2;
-    context.clearRect(0, 0, canvas.width(), canvas.height());
-    points = getPoints();
-    if (!(points.length > 1)) return;
-    context.beginPath();
-    s = Smooth(points, getSmoothConfig());
-    if (segmentIndex != null) {
-      context.moveTo.apply(context, s(segmentIndex));
-    } else {
-      context.moveTo.apply(context, s(0));
+    s = Smooth(points, config);
+    /* Calculate the increment for t
+    */
+    _ref = [s(i), s(0.5), s(i + 1)], start = _ref[0], mid = _ref[1], end = _ref[2];
+    segmentLength = distance(start, mid) + distance(mid, end);
+    averageLineLength = 10;
+    dt = averageLineLength / segmentLength;
+    for (t = 0; t < 1; t += dt) {
+      context.lineTo.apply(context, s(i + t));
     }
-    lastIndex = points.length - 1;
-    if (selectedClip() === 'periodic') lastIndex++;
-    for (i = 0; 0 <= lastIndex ? i < lastIndex : i > lastIndex; 0 <= lastIndex ? i++ : i--) {
-      if (segmentIndex != null) if (i !== segmentIndex) continue;
-      start = s(i);
-      mid = s(0.5);
-      end = s(i + 1);
-      dist = distance(start, mid) + distance(mid, end);
-      averageSegmentLength = 10;
-      dt = averageSegmentLength / dist;
-      for (t = 0; t <= 1; t += dt) {
-        context.lineTo.apply(context, s(i + t));
-      }
-      context.lineTo.apply(context, s(i + 1));
-    }
-    context.lineJoin = 'round';
-    context.lineWidth = lineWidth;
-    context.strokeStyle = color;
-    return context.stroke();
+    return context.lineTo.apply(context, s(i + 1));
   };
 
   redraw = function() {
-    return drawSmoothCurve(cx, '#0000ff');
+    var i, lastIndex, points;
+    cx.clearRect(0, 0, canvas.width(), canvas.height());
+    points = getPoints();
+    if (points.length >= 2) {
+      cx.beginPath();
+      cx.moveTo.apply(cx, points[0]);
+      lastIndex = points.length - 1;
+      if (smoothConfig.clip === 'periodic') lastIndex++;
+      for (i = 0; 0 <= lastIndex ? i < lastIndex : i > lastIndex; 0 <= lastIndex ? i++ : i--) {
+        addCurveSegment(cx, i, points);
+      }
+      cx.lineWidth = 2;
+      cx.strokeStyle = '#0000ff';
+      cx.lineJoin = 'round';
+      cx.lineCap = 'round';
+      return cx.stroke();
+    }
   };
 
   hitTest = function(x, y) {
-    var i, _ref;
-    for (i = 0, _ref = getPoints().length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
-      drawSmoothCurve(hit_cx, "#FFFFFF", 10, i);
+    var i, points, _ref;
+    points = getPoints();
+    for (i = 0, _ref = points.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
+      hit_cx.clearRect(0, 0, canvas.width(), canvas.height());
+      hit_cx.beginPath();
+      hit_cx.moveTo(points[i]);
+      addCurveSegment(hit_cx, i, points);
+      hit_cx.color = "#FFFFFF";
+      hit_cx.lineWidth = 20;
+      hit_cx.lineCap = 'round';
+      hit_cx.lineJoin = 'round';
+      hit_cx.stroke();
       if (hit_cx.getImageData(x, y, 1, 1).data[3] === 255) return i;
     }
   };
