@@ -110,6 +110,7 @@ redraw = ->
 	cx.clearRect 0, 0, canvas.width(), canvas.height()
 
 	points = getPoints()
+	return unless points.length > 1
 	cx.beginPath()
 
 

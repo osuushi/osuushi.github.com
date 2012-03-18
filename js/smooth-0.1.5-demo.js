@@ -143,6 +143,7 @@
     var delta, dist, end, i, lastIndex, mid, points, s, start, t;
     cx.clearRect(0, 0, canvas.width(), canvas.height());
     points = getPoints();
+    if (!(points.length > 1)) return;
     cx.beginPath();
     s = Smooth(points, getSmoothConfig());
     cx.moveTo.apply(cx, s(0));
