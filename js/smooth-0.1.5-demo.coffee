@@ -1,14 +1,27 @@
 plotBox = null
 canvas = null
-cx = null
+cx = null #context for rendering the path
+
+hit_cx = null #context used for hit-test
+
+
 
 cubicTension = 0
 lanczosFilterSize = 2
 
 $ ->
 	plotBox = $ '#plot-box' # get the plot box div
+
+	#Create the canvas
 	canvas = $("<canvas width=600 height=500 />").appendTo(plotBox)
-	cx = canvas[0].getContext '2d'
+	canvas.css zIndex: 2
+	cx = canvas[0].getContext '2d' #get the canvas context
+
+	#Create the hidden hit test canvas
+	hit_canvas = $("<canvas width=600 height=500 />").appendTo(plotBox)
+		.css opacity: 0, position: 'absolute', top:0, left:0
+	hit_cx = hit_canvas[0].getContext '2d'
+
 	plotBox.dblclick plotBoxDoubleClick #bind double click
 
 	makePointHandle 50, 30
@@ -56,13 +69,25 @@ makePointHandle = (x, y) ->
 		handleDoubleClick handle
 		return false
 
+	return handle
+
 plotBoxDoubleClick = (ev) ->
 	#Translate location of click to local coordinates
 	offset = plotBox.offset()
 	x = ev.pageX - offset.left
 	y = ev.pageY - offset.top
+
+	#Find the index of the point starting the clicked segment
+	index = hitTest x, y
+	
+	beforeHandle = getPointHandles()[index] if index?
+
 	#Add a new handle
-	makePointHandle x, y
+	newHandle = makePointHandle x, y
+
+	#move new handle if needed
+	newHandle.insertAfter $(beforeHandle) if beforeHandle?
+
 	redraw()
 	return false
 
@@ -103,26 +128,26 @@ getSmoothConfig = ->
 
 	return config
 
+drawSmoothCurve = (context, color, lineWidth = 2, segmentIndex) ->
 
-
-redraw = ->
 	#Clear the context
-	cx.clearRect 0, 0, canvas.width(), canvas.height()
+	context.clearRect 0, 0, canvas.width(), canvas.height()
 
 	points = getPoints()
 	return unless points.length > 1
-	cx.beginPath()
+	context.beginPath()
 
 
 	#Create the smooth function
 	s = Smooth points, getSmoothConfig()
 	#Draw lines between points
-	cx.moveTo s(0)...
+	context.moveTo s(0)...
 
 	lastIndex = points.length - 1
 	lastIndex++ if selectedClip() is 'periodic'
 	
 	for i in [0...lastIndex]
+		if segmentIndex? then continue if i isnt segmentIndex
 		#compute reasonable delta
 		start = s i
 		mid = s 0.5
@@ -130,10 +155,22 @@ redraw = ->
 		dist = Math.sqrt Math.pow(start[0] - mid[0], 2) + Math.pow(start[1] - mid[1], 2)
 		dist += Math.sqrt Math.pow(mid[0] - end[0], 2) + Math.pow(mid[1] - end[1], 2)
 		delta = 10/dist
-		cx.lineTo s(i + t)... for t in [0..1] by delta
-		cx.lineTo s(i+1)...
-	cx.lineJoin = 'round'
-	cx.lineWidth = 2
-	cx.strokeStyle = '#0000FF'
-	cx.stroke()
-	
+		context.lineTo s(i + t)... for t in [0..1] by delta
+		context.lineTo s(i+1)...
+	context.lineJoin = 'round'
+	context.lineWidth = lineWidth
+	context.strokeStyle = color
+	context.stroke()
+
+redraw = ->
+	drawSmoothCurve cx, '#0000ff'
+
+#Find out which segment hits a point (giving lower index segments precedent)
+# return undefined if no segment hit
+hitTest = (x, y) ->
+	for i in [0...getPoints().length]
+		#Draw the curve
+		drawSmoothCurve hit_cx, "#FFFFFF", 10, i
+		#Check the pixel
+		return i if hit_cx.getImageData(x, y, 1, 1).data[0]
+	return undefined
