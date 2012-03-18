@@ -11,7 +11,16 @@ $ ->
 	makePointHandle 400, 100
 	makePointHandle 70, 400
 
+	#Set up sliders
+	$("#tension-slider").slider min:0, max:1, step:.1, slide: redraw
 
+	#Bind selects
+	$('#method').change ->
+		updateConfigBox()
+		redraw()
+	$('#clip').change redraw
+
+	updateConfigBox();
 	redraw();
 
 getPointHandles = -> plotBox.children 'div.handle'
@@ -46,18 +55,55 @@ plotBoxDoubleClick = (ev) ->
 handleDoubleClick = (handle) -> 
 	handle.remove()
 	redraw()
-	
+
+selectedMethod = -> $('#method option:selected').val()
+
+selectedClip = -> $('#clip option:selected').val()
+
+
+updateConfigBox = ->
+	method = selectedMethod()
+	#Hide all method boxes
+	$('div.method-config').hide()
+	$("div##{method}-config").show()
+
+
+getSmoothConfig = ->
+	config = method: selectedMethod(), clip: selectedClip()
+	switch config.method
+		when 'cubic'
+			config.cubicTension = $("#tension-slider").slider "value"
+
+
+	return config
+
+
 
 redraw = ->
 	#Clear the context
 	cx.clearRect 0, 0, canvas.width(), canvas.height()
-	#Draw lines between points
+
 	points = getPoints()
 	cx.beginPath()
-	cx.moveTo points.shift()...
-	for p in points
-		cx.lineTo p...
 
+
+	#Create the smooth function
+	s = Smooth points, getSmoothConfig()
+	#Draw lines between points
+	cx.moveTo s 0
+
+	lastIndex = points.length - 1
+	lastIndex++ if selectedClip() is 'periodic'
+	
+	for i in [0...lastIndex]
+		#compute reasonable delta
+		start = s i
+		end = s i+1
+		dist = Math.sqrt Math.pow(start[0] - end[0], 2) + Math.pow(start[1] - end[1], 2)
+		delta = 5/dist
+		cx.lineTo s(i + t)... for t in [0..1] by delta
+		cx.lineTo s(i+1)...
+	cx.lineJoin = 'round'
 	cx.lineWidth = 2
 	cx.strokeStyle = '#0000FF'
 	cx.stroke()

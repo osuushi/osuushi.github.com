@@ -22,7 +22,27 @@
 		<div class="post-title">Smooth.js 0.1.5 Demo</div><br>
 		Drag the points below to move them. Double click to add/remove points.<br><br>
 		<div id = 'plot-box'></div>
-		<div id = 'config-box'></div>
+		<div class = 'config-box'>
+			<label for="method">Method: </label>
+			<select id = 'method'>
+				<option value="linear">Linear</option>
+				<option value="cubic" selected="selected">Cubic</option>
+				<option value="lanczos" >Lanczos</option>
+			</select>
+			<label for="clip" style="margin-left:20px">Clip: </label>
+			<select id = 'clip'>
+				<option value="clamp">Clamp</option>
+				<option value="zero">Zero</option>
+				<option value="periodic">Periodic</option>
+				<option value="mirror">Mirror</option>
+			</select>
+		</div>
+
+		<div id='cubic-config' class='config-box method-config'>
+			Tension: 
+			<div id="tension-slider" style="display:inline-block; margin-left:10px;width:150px;height:10px;"></div>
+		</div>
 	</div>
+	<div style="height:200px"> </div>
 </body>
 </html>

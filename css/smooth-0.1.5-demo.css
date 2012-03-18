@@ -7,11 +7,6 @@ div#plot-box {
 	overflow: hidden;
 }
 
-div#config-box {
-	position:relative;
-	width:600px;
-	border: 1px solid black
-}
 
 /* Point handle */
 div.handle {
@@ -23,3 +18,14 @@ div.handle {
 	border: 1px solid #333;
 	opacity: 0.8;
 }
+
+
+
+div.config-box {
+	position:relative;
+	width:580px;
+	border: 1px solid black;
+	padding: 10px;
+}
+
+select { vertical-align:bottom; }
