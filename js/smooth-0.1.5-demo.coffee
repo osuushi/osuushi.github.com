@@ -185,6 +185,9 @@ redraw = ->
 #Find out which segment hits a point (giving lower index segments precedent)
 # return undefined if no segment hit
 hitTest = (x, y) ->
+	#For our hit test, we render each curve segment with a thick stroke into a hidden canvas, then we
+	#read the pixel we're testing to see if it is opaque. If it is opaque, then we return the index of
+	#that segment's start point. The thicker the stroke, the less accurately you have to click the line
 	for i in [0...getPoints().length]
 		#Draw the curve
 		drawSmoothCurve hit_cx, "#FFFFFF", 10, i
