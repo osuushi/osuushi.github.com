@@ -160,20 +160,23 @@ addCurveSegment = (context, i, cachedPoints) ->
 	#Create the smooth function
 	s = Smooth points, config
 
-	### Calculate the increment for t ###
-	#Estimate the length of the segment by approximating it as line segments
-	[start, mid, end] = [s(i), s(0.5), s(i+1)] #break into two pieces
+	#average step distance
+	averageLineLength = 1 
 
-	#add up the lengths of the pieces
-	segmentLength = distance(start, mid) + distance(mid, end) 
-	#average step size is 10 pixels
-	averageLineLength = 10 
-	# get t increment to achieve average length
-	dt = averageLineLength/segmentLength 
+	#Incrementing the index by a constant amount does not result in a constant distance advancement
+	#To ameliorate this, we divide the segment into a few pieces and compute a different increment for
+	#each piece to approximate the advancement distance we want.
 
-	#Add the line segments
-	context.lineTo s(i + t)... for t in [0...1] by dt # step through by t increment
-	context.lineTo s(i+1)... #ensure that the path actually passes through the end points
+	pieceCount = 2 #should be a power of two so the floating point math comes out exact
+	for t in [0...1] by 1/pieceCount
+		[start, end] = [s(i + t), s(i + t + 1/pieceCount)]
+		pieceLength = distance start, end
+		#compute du so that we get the desired average line length
+		du = averageLineLength/pieceLength
+		context.lineTo s(i + t + u)... for u in [0...1/pieceCount] by du
+	
+	#ensure that the path actually passes through the end points
+	context.lineTo s(i+1)...
 
 
 

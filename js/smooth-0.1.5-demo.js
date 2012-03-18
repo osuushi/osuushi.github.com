@@ -151,7 +151,7 @@
   };
 
   addCurveSegment = function(context, i, cachedPoints) {
-    var averageLineLength, config, dt, end, k, mid, points, s, segmentLength, start, t, v, _ref;
+    var averageLineLength, config, du, end, k, pieceCount, pieceLength, points, s, start, t, u, v, _ref, _ref2, _ref3;
     points = cachedPoints != null ? cachedPoints : getPoints();
     config = {};
     for (k in smoothConfig) {
@@ -160,14 +160,15 @@
       config[k] = v;
     }
     s = Smooth(points, config);
-    /* Calculate the increment for t
-    */
-    _ref = [s(i), s(0.5), s(i + 1)], start = _ref[0], mid = _ref[1], end = _ref[2];
-    segmentLength = distance(start, mid) + distance(mid, end);
-    averageLineLength = 10;
-    dt = averageLineLength / segmentLength;
-    for (t = 0; t < 1; t += dt) {
-      context.lineTo.apply(context, s(i + t));
+    averageLineLength = 1;
+    pieceCount = 2;
+    for (t = 0, _ref = 1 / pieceCount; t < 1; t += _ref) {
+      _ref2 = [s(i + t), s(i + t + 1 / pieceCount)], start = _ref2[0], end = _ref2[1];
+      pieceLength = distance(start, end);
+      du = averageLineLength / pieceLength;
+      for (u = 0, _ref3 = 1 / pieceCount; 0 <= _ref3 ? u < _ref3 : u > _ref3; u += du) {
+        context.lineTo.apply(context, s(i + t + u));
+      }
     }
     return context.lineTo.apply(context, s(i + 1));
   };
