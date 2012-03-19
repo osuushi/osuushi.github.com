@@ -103,4 +103,9 @@ code {
 	color: black;
 	display: inline-block;
 	line-height: 1.2em;
+	font-size: .75em;
+	overflow-x: auto;
+	overflow-y: auto;
+	max-width: 57em;
+
 }

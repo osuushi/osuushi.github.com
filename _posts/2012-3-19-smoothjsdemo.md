@@ -20,7 +20,7 @@ The main function driving the drawing is the `addCurveSegment` function, which t
 adds the the segment from `points[i]` to `point[i+1]` to the path of the passed context. I'll talk further 
 down about the reason for rendering each curve segment separately like this.
 
-{% highlight coffee %}
+{% highlight coffeescript %}
 
 #Add a curve segment to `context` according to current settings
 #	points: the entire array of points
