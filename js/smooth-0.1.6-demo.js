@@ -1,7 +1,6 @@
 (function() {
   var addCurveSegment, canvas, changeCubicSlider, changeLanczosSlider, cx, distance, getHandlePoint, getHandles, getPoints, handleDoubleClick, hitTest, hit_cx, makeHandle, plotBox, plotBoxDoubleClick, redraw, smoothConfig, updateConfigBox,
-    __slice = Array.prototype.slice,
-    __hasProp = Object.prototype.hasOwnProperty;
+    __slice = Array.prototype.slice;
 
   plotBox = null;
 
@@ -150,16 +149,9 @@
     return redraw();
   };
 
-  addCurveSegment = function(context, i, cachedPoints) {
-    var averageLineLength, config, du, end, k, pieceCount, pieceLength, points, s, start, t, u, v, _ref, _ref2, _ref3;
-    points = cachedPoints != null ? cachedPoints : getPoints();
-    config = {};
-    for (k in smoothConfig) {
-      if (!__hasProp.call(smoothConfig, k)) continue;
-      v = smoothConfig[k];
-      config[k] = v;
-    }
-    s = Smooth(points, config);
+  addCurveSegment = function(context, i, points) {
+    var averageLineLength, du, end, pieceCount, pieceLength, s, start, t, u, _ref, _ref2, _ref3;
+    s = Smooth(points, smoothConfig);
     averageLineLength = 1;
     pieceCount = 2;
     for (t = 0, _ref = 1 / pieceCount; t < 1; t += _ref) {
@@ -196,8 +188,8 @@
   hitTest = function(x, y) {
     var i, points, _ref;
     points = getPoints();
+    hit_cx.clearRect(0, 0, canvas.width(), canvas.height());
     for (i = 0, _ref = points.length; 0 <= _ref ? i < _ref : i > _ref; 0 <= _ref ? i++ : i--) {
-      hit_cx.clearRect(0, 0, canvas.width(), canvas.height());
       hit_cx.beginPath();
       hit_cx.moveTo(points[i]);
       addCurveSegment(hit_cx, i, points);

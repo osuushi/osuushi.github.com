@@ -1,4 +1,5 @@
 plotBox = null #The box containing the handles and path drawing canvas
+
 canvas = null #canvas for drawing the path
 cx = null #context for rendering the path
 
@@ -148,17 +149,10 @@ changeCubicSlider = (ev, ui) ->
 
 
 #Add a curve segment to `context` according to current settings
-#	cachedPoints: result of getPoints because reading them from the DOM is expensive
-addCurveSegment = (context, i, cachedPoints) ->
-	#Get the current points
-	points = cachedPoints ? getPoints()
-
-	#copy the config (current Smooth.js version will modify it; this will be fixed in the next release)
-	config = {}
-	config[k] = v for own k,v of smoothConfig
-
+#	points: the entire array of points
+addCurveSegment = (context, i, points) ->
 	#Create the smooth function
-	s = Smooth points, config
+	s = Smooth points, smoothConfig
 
 	#average step distance
 	averageLineLength = 1 
@@ -213,11 +207,11 @@ redraw = ->
 hitTest = (x, y) ->
 	# The pixel hit test leverages our drawing code, and an invisible canvas
 	points = getPoints()
+	#Clear out the canvas
+	hit_cx.clearRect 0, 0, canvas.width(), canvas.height()
 	for i in [0...points.length] #For each segment
-		#Clear out the canvas and reset the path
-		hit_cx.clearRect 0, 0, canvas.width(), canvas.height()
+		#reset the path
 		hit_cx.beginPath()
-
 		#Move to the segment start and add the curve segment
 		hit_cx.moveTo points[i]
 		addCurveSegment hit_cx, i, points
