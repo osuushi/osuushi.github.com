@@ -32,7 +32,9 @@ addCurveSegment = (context, i, points) ->
 	averageLineLength = 1 
 
 	#Incrementing the index by a constant amount does not result in a constant distance
-	#advancement To ameliorate this, we divide the segment into a few pieces and compute a
+	#advancement.
+	#
+	#To ameliorate this, we divide the segment into a few pieces and compute a 
 	#different increment for each piece to approximate the advancement distance we want.
 
 	pieceCount = 2 #should be a power of two so the for loop comes out exact
@@ -61,7 +63,8 @@ be short enough that the curve  appears smooth.
 So the next obvious step is to estimate the length of the curve (by breaking it into a few
 segments via the  previous method), and then divide that into the desired line length to get
 your step size for `t`. That gets us closer, but it's still not good enough. The problem is
-that the distance traveled as you increase `t` is not constant.
+that the distance traveled as you increase `t` is not constant, so you'll get some short 
+segments and some long segments, resulting in hard corners.
 
 Ideally, we'd like a solution where we can figure out exactly how much to increase `t` to
 travel x distance. For some kinds of curves, you can use calculus to get a closed form
@@ -83,13 +86,13 @@ the path. Simple.
 
 Now we get to the question of why we are handling each segment separately.
 
-So the goal of the `hitTest` function is to determine if a double-click was near a curve
-segment so that we  can add a point to that segment rather than at the end of the path. One way
-we could do that is to iterate along the smoothed function, checking point distances along the
-way. That would work, but advancing by small steps is even more crucial in that case than when
-drawing.
+The goal of the `hitTest` function is to determine if a double-click was on or near a curve
+segment. One way we could do that is to iterate along the smoothed function, checking point 
+distances along the way. That would work, but advancing by small steps is even more crucial in
+that case than when drawing. It's tends to be pretty ugly, it's hard to debug, and it involves 
+repeating, with slight changes, a lot of the code we already have for drawing.
 
-There is an easier way:
+There is an easier way, however:
 
 {% highlight coffeescript tabsize=4 %}
 
