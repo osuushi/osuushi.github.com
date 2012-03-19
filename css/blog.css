@@ -90,6 +90,9 @@ div#posts {
 	padding-top: .5em;
 }
 
+div#posts > ul > li {
+	margin-bottom: 1em;
+}
 
 div.post {
 
