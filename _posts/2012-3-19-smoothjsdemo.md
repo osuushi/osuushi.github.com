@@ -6,9 +6,9 @@ title: Fluid curves with Smooth.js and HTML5 canvas
 To show off the sort of stuff you can do with the [Smooth.js interpolation
 library](https://github.com/osuushi/Smooth.js), I've put together  [a demo](/plotdemo016.html)
 showing how it can be used to perform highly customizable interpolation of two  dimensional
-points. You can check out [CoffeeScript
+points. The interface code depends on jQuery and jQuery UI. You can check out the [CoffeeScript
 source](https://github.com/osuushi/osuushi.github.com/blob/master/js/smooth-0.1.6-demo.coffee)
-for this demo. The interface code depends on jQuery and jQuery UI.
+for this demo.
 
 There's a lot going on in there, and most of it is code for handling the UI, but I want to talk
 specifically about the drawing code.
