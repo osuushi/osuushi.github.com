@@ -76,8 +76,9 @@ we get a nice smooth result.
 
 <h3>redraw</h3>
 
-The redraw function is straightforward and there's not much point in pasting the code here. In short, it 
-clears out the canvas, calls `addCurveSegment` for each segment, and then strokes the path. Simple
+The redraw function is straightforward and there's not much point in pasting the code here. In
+short, it  clears out the canvas, calls `addCurveSegment` for each segment, and then strokes
+the path.  Simple.
 
 <h3>hitTest</h3>
 
@@ -89,7 +90,7 @@ we could do that is to iterate along the smoothed function, checking point dista
 way. That would work, but advancing by small steps is even more crucial in that case than when
 drawing.
 
-But there is an easier way:
+There is an easier way:
 
 {% highlight coffeescript tabsize=4 %}
 
@@ -124,7 +125,7 @@ on a graphical element that can't be approximated by a simple rectangle or other
 shape.
 
 What we're doing is drawing each curve segment as before into an invisible canvas, and then
-seeing if the  pixel we care about has been drawn into. By varying the line width, we can
+seeing if the pixel we care about has been drawn into. By varying the line width, we can
 change the precision with which the user must click on the path. A line width of 20 gives the
 user a nice 10 pixel radius to click on.
 
