@@ -17,10 +17,10 @@ about the drawing code.
 <h3>addCurveSegment</h3>
 
 The main function driving the drawing is the `addCurveSegment` function, which takes the set of points, and 
-adds the the segment from `points[i]` to `point[i+1]` to the path of the passed context. I'll talk further 
+adds the the segment from `points[i]` to `points[i+1]` to the path of the passed context. I'll talk further 
 down about the reason for rendering each curve segment separately like this.
 
-{% highlight coffeescript %}
+{% highlight coffeescript tabsize=4 %}
 
 #Add a curve segment to `context` according to current settings
 #	points: the entire array of points
@@ -51,7 +51,7 @@ addCurveSegment = (context, i, points) ->
 So first we do the obvious; we make the smooth function `s` (since Smooth.js uses lazy evaluation, recreating
 `s` each time is inexpensive).
 
-The next chunk of code needs some explanation. Basically what we want to do turn the parametric function s 
+The next chunk of code needs some explanation. Basically what we want to do is turn the parametric function s 
 into a sequence of connected line segments approximating the function.
 
 The most obvious way to do that is to vary `t` from `i` to `i+1`, stepping by, say 0.1. Unfortunately, that's
@@ -88,7 +88,7 @@ steps is even more crucial in that case than when drawing.
 
 But there is an easier way:
 
-{% highlight coffeescript %}
+{% highlight coffeescript tabsize=4 %}
 
 hitTest = (x, y) ->
 	# The pixel hit test leverages our drawing code, and an invisible canvas

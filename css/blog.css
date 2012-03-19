@@ -8,7 +8,7 @@ body {
 
 div#main {
 	position:relative;
-	width: 35em;
+	width: 40em;
 	padding: 1em;
 	margin: 0 auto;
 	border-radius: 0.8em;
@@ -106,6 +106,6 @@ code {
 	font-size: .75em;
 	overflow-x: auto;
 	overflow-y: auto;
-	max-width: 57em;
+	max-width: 65em;
 
 }
