@@ -27,7 +27,6 @@
 		</a>
 		<hr>
 		Drag the points below to move them. Double click to add/remove points.<br><br>
-		<div id = 'plot-box'></div>
 		<div class = 'config-box'>
 			<label for="method">Method: </label>
 			<select id = 'method'>
@@ -53,6 +52,8 @@
 			Filter Size: <div id = 'lanczosfiltersize' style = "display:inline-block;width:30px">2</div>
 			<div id="lanczos-slider" style="display:inline-block; margin-left:10px;width:150px;font-size:10px"></div>
 		</div>
+		<div id = 'plot-box'></div>
+		
 		<br>
 		The meat of the actual curve drawing is in the <code>addCurveSegment</code> function, which samples
 		the output of Smooth.js to create line segments approximating the function.
