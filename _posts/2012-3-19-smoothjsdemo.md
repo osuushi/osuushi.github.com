@@ -59,16 +59,16 @@ Unfortunately, that's not good enough for longer curve segments, because you nee
 be short enough that the curve  appears smooth.
 
 So the next obvious step is to estimate the length of the curve (by breaking it into a few
-segments via the  previous method), and then dividing that into the desired line length to get
-your step size for `t`. That's  gets us closer, but it's still not good enough. The problem is
+segments via the  previous method), and then divide that into the desired line length to get
+your step size for `t`. That gets us closer, but it's still not good enough. The problem is
 that the distance traveled as you increase `t` is not constant.
 
-Ideally, we'd like a solution where we can figure out exactly how much to increase `t` by to move
-ahead x  distance. For some kinds of curves, you can use calculus to get a closed form solution
-for this. For others, you can use more expensive numerical methods.
+Ideally, we'd like a solution where we can figure out exactly how much to increase `t` to
+travel x distance. For some kinds of curves, you can use calculus to get a closed form
+solution for this. For others, you can use more expensive numerical methods.
 
 Instead, we'll exploit the fact that *for sufficiently small intervals along `t`*, distance
-traveled *does*  remain approximately constant as `t` increases. In fact, for our purposes,
+traveled *does* remain approximately constant as `t` increases. In fact, for our purposes,
 simply splitting the curve into two pieces does the trick. Within each of those pieces we once
 again estimate the length of the piece and then divide that into the desired line length, and
 we get a nice smooth result.
@@ -77,7 +77,7 @@ we get a nice smooth result.
 
 The redraw function is straightforward and there's not much point in pasting the code here. In
 short, it  clears out the canvas, calls `addCurveSegment` for each segment, and then strokes
-the path.  Simple.
+the path. Simple.
 
 <h3>hitTest</h3>
 
