@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-	<title>Smooth.js 0.1.6 Demo</title>
+	<title>Fluid curves with Smooth.js and HTML5 canvas</title>
 	<link href="css/blog.css" rel="stylesheet" type="text/css">
 
 	<script type="text/javascript" src = "http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
@@ -19,7 +19,16 @@
 </head>
 <body>
 	<div id = 'main' style="width:610px">
-		<div class="post-title">Smooth.js 0.1.6 Demo</div><br>
+		<div class="post-title">Fluid curves with Smooth.js and HTML5 canvas</div><br>
+		This is a demonstration of using <a href = "https://github.com/osuushi/Smooth.js">Smooth.js</a>
+		and HTML5 canvas to draw a smooth path through a set of points.
+		<br><br>
+		<a href = "/2012/03/19/smoothjsdemo.html">See this blog post</a> for further discussion.
+		You can also see the
+		<a href = "https://github.com/osuushi/osuushi.github.com/blob/master/js/smooth-0.1.6-demo.coffee">
+			CoffeeScript source.
+		</a>.
+		<hr>
 		Drag the points below to move them. Double click to add/remove points.<br><br>
 		<div id = 'plot-box'></div>
 		<div class = 'config-box'>
@@ -48,15 +57,6 @@
 			<div id="lanczos-slider" style="display:inline-block; margin-left:10px;width:150px;font-size:10px"></div>
 		</div>
 		<br>
-		The above is a demonstration of using <a href = "https://github.com/osuushi/Smooth.js">Smooth.js</a>
-		and HTML5 canvas to draw a smooth path through a set of points.
-		<br><br>
-		<a href = "/2012/03/19/smoothjsdemo.html">See this blog post</a> for further discussion.
-		<br><br>
-		You can see the CoffeeScript source for this demo
-		<a href = "https://github.com/osuushi/osuushi.github.com/blob/master/js/smooth-0.1.6-demo.coffee">
-			here
-		</a>.
 		The meat of the actual curve drawing is in the <code>addCurveSegment</code> function, which samples
 		the output of Smooth.js to create line segments approximating the function.
 		<h4>Notes</h4>
