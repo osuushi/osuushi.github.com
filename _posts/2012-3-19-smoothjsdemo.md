@@ -8,7 +8,7 @@ library](https://github.com/osuushi/Smooth.js), I've put together  [a demo](/plo
 showing how it can be used to perform highly customizable interpolation of two  dimensional
 points. You can check out [CoffeeScript
 source](https://github.com/osuushi/osuushi.github.com/blob/master/js/smooth-0.1.6-demo.coffee)
-for this demo.
+for this demo. The interface code depends on jQuery and jQuery UI.
 
 There's a lot going on in there, and most of it is code for handling the UI, but I want to talk
 specifically about the drawing code.
