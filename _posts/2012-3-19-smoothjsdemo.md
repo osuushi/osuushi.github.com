@@ -48,7 +48,7 @@ addCurveSegment = (context, i, points) ->
 
 {% endhighlight %}
 
-So first we do the obvious; we make the smooth function `s` (since Smooth.js uses lazy
+So first we do the obvious; we turn the array into the function `s` (since Smooth.js uses lazy
 evaluation, recreating `s` each time is inexpensive).
 
 The next chunk of code needs some explanation. Basically what we want to do is turn the
