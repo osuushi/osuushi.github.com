@@ -51,14 +51,14 @@
 		The above is a demonstration of using <a href = "https://github.com/osuushi/Smooth.js">Smooth.js</a>
 		and HTML5 canvas to draw a smooth path through a set of points.
 		<br><br>
+		<a href = "/2012/03/19/smoothjsdemo.html">See this blog post</a> for further discussion.
+		<br><br>
 		You can see the CoffeeScript source for this demo
 		<a href = "https://github.com/osuushi/osuushi.github.com/blob/master/js/smooth-0.1.6-demo.coffee">
 			here
 		</a>.
 		The meat of the actual curve drawing is in the <code>addCurveSegment</code> function, which samples
 		the output of Smooth.js to create line segments approximating the function.
-		<br>
-		<a href = "/2012/03/19/smoothjsdemo.html">See this blog post</a> for further discussion.
 		<h4>Notes</h4>
 		Nearest neighbor interpolation isn't included because the results in this case would look identical
 		to linear interpolation. This is because nearest neighbor is discontinuous, and the discontinuities
