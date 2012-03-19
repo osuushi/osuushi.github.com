@@ -103,6 +103,9 @@
     handle.dblclick(function(ev) {
       return handleDoubleClick(handle);
     });
+    handle.css({
+      position: 'absolute'
+    });
     return handle;
   };
 

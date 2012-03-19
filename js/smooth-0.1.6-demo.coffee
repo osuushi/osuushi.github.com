@@ -89,6 +89,7 @@ makeHandle = (x, y) ->
 	#On double-click, remove handle
 	handle.dblclick (ev) -> handleDoubleClick handle
 
+	handle.css position:'absolute'
 	return handle
 
 #Double-click handler for the plot box (off of any handle)
