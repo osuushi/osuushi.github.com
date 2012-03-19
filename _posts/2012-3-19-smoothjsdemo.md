@@ -20,7 +20,7 @@ The main function driving the drawing is the `addCurveSegment` function, which t
 adds the the segment from `points[i]` to `point[i+1]` to the path of the passed context. I'll talk further 
 down about the reason for rendering each curve segment separately like this.
 
-{ % highlight coffeescript %}
+{% highlight coffee-script %}
 
 #Add a curve segment to `context` according to current settings
 #	points: the entire array of points
@@ -46,7 +46,7 @@ addCurveSegment = (context, i, points) ->
 	#ensure that the path actually passes through the end points
 	context.lineTo s(i+1)...
 
-{ % endhighlight % }
+{% endhighlight %}
 
 So first we do the obvious; we make the smooth function `s` (since Smooth.js uses lazy evaluation, recreating
 `s` each time is inexpensive).
@@ -88,7 +88,7 @@ steps is even more crucial in that case than when drawing.
 
 But there is an easier way:
 
-{% highlight coffeescript %}
+{% highlight coffee-script %}
 
 hitTest = (x, y) ->
 	# The pixel hit test leverages our drawing code, and an invisible canvas
@@ -125,4 +125,4 @@ the user must click on the path. A line width of 20 gives the user a nice 10 pix
 
 A side note: the above implementation of the hit test is not very efficient. You can achieve the same result
 with a 1x1 pixel canvas by using transforms. That code is harder to understand though, and for a small canvas
-like the one in this demo, even my six-year-old MacBook handles it without blinking.
+like the one in this demo, even my six-year-old MacBook handles it without blinking
