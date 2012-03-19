@@ -103,9 +103,10 @@ code {
 	color: black;
 	display: inline-block;
 	line-height: 1.2em;
-	font-size: .75em;
+	font-size: .9em;
 	overflow-x: auto;
 	overflow-y: auto;
-	max-width: 65em;
+	max-width: 54.5em;
+	vertical-align: text-top;
 
 }
