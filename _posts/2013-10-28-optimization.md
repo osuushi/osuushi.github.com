@@ -67,7 +67,7 @@ unfortunately), but thanks to the `set` method of TypedArrays, that loop is nati
 
 The CoffeeScript code looks like this:
 
-```coffee
+```coffeescript
 offsetData = data.subarray 0, data.length - 1
 data.set offsetData, 1
 ```
