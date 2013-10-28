@@ -39,7 +39,9 @@ pixel data.
 
 It would look something like this:
 
-```coffeescript
+
+{% highlight coffeescript tabsize=4 %}
+
 cx = canvas.getContext '2d'
 #Get ImageData for mask image
 cx.globalCompositeOperation = 'copy'
@@ -52,7 +54,9 @@ colorData = cx.getImageData 0, 0, w, h
 colorData.data[i+3] = maskData.data[i] for i in [0...4*maskData.data.length] by 4
 #Move data back into canvas
 cx.putImageData colorData
-```
+
+
+{% endhighlight %}
 
 ## Exploiting compositing operations
 
@@ -67,7 +71,8 @@ call `putImageData` to put it back into the canvas. Then we draw the RGB image i
 
 This is faster, but it still involves a non-native loop:
 
-```coffeescript
+{% highlight coffeescript tabsize=4 %}
+
 cx = canvas.getContext '2d'
 #Get ImageData for mask image
 cx.globalCompositeOperation = 'copy'
@@ -80,7 +85,8 @@ cx.putImageData maskData
 #Draw RGB image into the canvas
 cx.globalCompositeOperation = 'source-in'
 cx.drawImage color, 0, 0
-```
+
+{% endhighlight %}
 
 ## Tolerating side effects
 
@@ -98,10 +104,12 @@ unfortunately), but thanks to the `set` method of TypedArrays, that loop is nati
 
 The CoffeeScript code for the shift looks like this:
 
-```coffeescript
+{% highlight coffeescript tabsize=4 %}
+
 offsetData = maskData.data.subarray 0, maskData.data.length - 1
 maskData.data.set offsetData, 1
-```
+
+{% endhighlight %}
 
 The first line looks like a copy, but it's not. We're simply creating a new *view* into the buffer,
 which is 1 element shorter to leave room for it to shift over (in the C world, this would be the
@@ -110,12 +118,14 @@ this view into the same buffer, from the second element on.
 
 Pseudo-code for this might, for each pixel, look something like this:
 
-```
+{% highlight coffeescript tabsize=4 %}
+
 pixel[i].alpha = pixel[i].blue
 pixel[i].blue = pixel[i].green
 pixel[i].green = pixel[i].red
 pixel[i].red = pixel[i-1].alpha
-```
+
+{% endhighlight %}
 
 In fact, it is only the first line we care about - copying the blue value into the alpha value.
 Everything after that is a *side effect*. We've actually corrupted the RGB values of the image. But
