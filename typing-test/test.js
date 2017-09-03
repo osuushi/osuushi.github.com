@@ -162,13 +162,13 @@ quoteRequestBody.append('format', 'json');
 quoteRequestBody.append('lang', 'en');
 
 async function fetchQuoteText () {
-  let response = await fetch('http://crossorigin.me/http://api.forismatic.com/api/1.0/', {method: 'POST', body: quoteRequestBody});
+  let response = await fetch('https://talaikis.com/api/quotes/random/', {
+    method: 'POST',
+    body: quoteRequestBody,
+  });
   // The api does a weird invalid escaping of apostrophes, so we have to fix it before we can parse
-  let result = await response.text();
-  result = result.replace(/\\'/g, "'");
-  result = JSON.parse(result);
-
-  let text = result.quoteText;
+  let result = await response.json();
+  let text = result.quote;
 
   // Normalize hard to type characters
   text = text.replace(/[“”]/g, '"');
