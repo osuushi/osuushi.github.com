@@ -45,6 +45,7 @@ setInterval(sampleWpm, sampleRate);
 
 async function initQuote () {
   gameState = 'loading';
+  typingArea.value = ''
   quoteContent.textContent = 'Loading…'
   let quote = await getQuote();
 
