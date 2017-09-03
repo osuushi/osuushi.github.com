@@ -2,8 +2,17 @@ quoteContent = document.querySelector('.quote-content');
 typingArea = document.querySelector('.typing-area');
 statsEl = document.querySelector('.stats');
 
+statFields = {};
+for (let fieldName of ['wpm', 'cpm', 'quoteCount', 'historicWpm']) {
+  statFields[fieldName] = statsEl.querySelector('.' + fieldName);
+}
+
 typingArea.oninput = onInput;
 typingArea.onkeydown = onKeyDown;
+
+let history;
+loadHistory();
+const historyCap = 20;
 
 // Words are standardized to five keystrokes. To simplify, we define in terms
 // of characters, and assume that ~2% of characters involve two keystrokes.
@@ -24,12 +33,14 @@ let startTime;
 async function initQuote () {
   gameState = 'loading';
   quoteContent.textContent = 'Loading…'
-  typingArea.value = ''
   let quote = await getQuote();
-  setQuote(quote);
 
   gameState = 'typing';
   startTime = null;
+
+  setQuote(quote);
+  typingArea.value = ''
+
 
   typingArea.value = '';
   typingArea.focus();
@@ -41,6 +52,7 @@ function setQuote (quote) {
   currentQuote = quote;
   quoteContent.textContent = quote;
   resizeAreas();
+  updateStats();
 }
 
 function resizeAreas () {
@@ -57,20 +69,14 @@ function resizeAreas () {
 }
 
 function onInput (event) {
+  if (gameState === 'typing' && startTime == null) startTime = Date.now();
   updateHighlight();
   updateStats();
   checkCompletion();
 }
 
 function updateStats () {
-  if (gameState !== 'typing') {
-    statsEl.innerHTML = '';
-    return;
-  }
-  if (startTime == null) {
-    startTime = Date.now();
-    statsEl.innerHTML = '';
-  }
+  if (gameState === 'complete') return;
 
   // standardize word as
   let input = typingArea.value;
@@ -78,20 +84,38 @@ function updateStats () {
   let wordCount = charCount / charsPerWord;
 
   let minutes = (Date.now() - startTime) / (60 * 1000)
-  statsEl.innerHTML = `
-    WPM: ${wordCount/minutes}
-    CPM: ${charCount/minutes}
+  statFields.wpm.textContent = (wordCount/minutes).toFixed(2);
+  statFields.cpm.textContent = (charCount/minutes).toFixed(2);
+  statFields.quoteCount.textContent = quoteCount;
 
-    (Pointless stuff)
-    Quote Count: ${quoteCount}
-  `;
+  statFields.historicWpm.textContent = computeHistoricWpm().toFixed(2);
+}
+
+function sum (arr) {
+  return arr.reduce((sum, val) => sum + val, 0);
+}
+
+function computeHistoricWpm () {
+  return 60 * 1000 * sum(history.words) / sum(history.times);
 }
 
 function checkCompletion () {
-  if (typingArea.value === currentQuote) {
-    gameState = 'complete';
-    typingArea.classList.add('valid');
+  if (typingArea.value === currentQuote && gameState !== 'complete') onComplete();
+}
+
+function onComplete () {
+  gameState = 'complete';
+  typingArea.classList.add('valid');
+  let words = currentQuote.length / charsPerWord;
+  let time = Date.now() - startTime;
+  history.words.push(words);
+  history.times.push(time);
+  if (history.words.length > historyCap) {
+    history.words.shift();
+    history.times.shift();
   }
+  saveHistory();
+  updateStats();
 }
 
 function onKeyDown (event) {
@@ -181,6 +205,22 @@ async function getQuote () {
   }
   quoteCount = parts.length;
   return parts.join(' ');
+}
+
+function saveHistory () {
+  localStorage.setItem('typingHistory', JSON.stringify(history));
+}
+
+function loadHistory () {
+  let raw = localStorage.getItem('typingHistory');
+  if (raw != null) {
+    history = JSON.parse(raw);
+  } else {
+    history = {
+      words: [],
+      times: [],
+    };
+  }
 }
 
 initQuote();
