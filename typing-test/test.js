@@ -14,6 +14,8 @@ let history;
 loadHistory();
 const historyCap = 20;
 
+const msPerMinute = 60 * 1000;
+
 // Words are standardized to five keystrokes. To simplify, we define in terms
 // of characters, and assume that ~2% of characters involve two keystrokes.
 const charsPerWord = 5 / 1.02;
@@ -68,6 +70,20 @@ function resizeAreas () {
   let bounds = quoteContent.getBoundingClientRect();
 }
 
+function drawCharts () {
+  drawHistoryChart();
+}
+
+function drawHistoryChart () {
+  if (history.words.length < 2) return;
+  let wpms = [];
+  for (let i = 0; i < history.words.length; i++) {
+    wpms.push(msPerMinute * history.words[i] / history.times[i])
+  }
+
+  Chartist.Line('.history-chart', {series: [wpms]}, {fullWidth: true});
+}
+
 function onInput (event) {
   if (gameState === 'typing' && startTime == null) startTime = Date.now();
   updateHighlight();
@@ -83,7 +99,7 @@ function updateStats () {
   let charCount = input.length;
   let wordCount = charCount / charsPerWord;
 
-  let minutes = (Date.now() - startTime) / (60 * 1000)
+  let minutes = (Date.now() - startTime) / msPerMinute
   statFields.wpm.textContent = (wordCount/minutes).toFixed(2);
   statFields.cpm.textContent = (charCount/minutes).toFixed(2);
   statFields.quoteCount.textContent = quoteCount;
@@ -96,7 +112,7 @@ function sum (arr) {
 }
 
 function computeHistoricWpm () {
-  return 60 * 1000 * sum(history.words) / sum(history.times);
+  return msPerMinute * sum(history.words) / sum(history.times);
 }
 
 function checkCompletion () {
@@ -116,6 +132,7 @@ function onComplete () {
   }
   saveHistory();
   updateStats();
+  drawCharts();
 }
 
 function onKeyDown (event) {

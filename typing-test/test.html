@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Typing test</title>
   <link rel="stylesheet" type="text/css" href="./main.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.0/chartist.min.css">
 </head>
 <body>
 <div class="quote-content" readonly tabindex="-1"></div>
@@ -12,8 +13,10 @@
   WPM: <span class="wpm"></span>
   CPM: <span class="cpm"></span>
 
-  WPM (moving average): <span class="historicWpm"></span>
+  <div class='wpm-chart'></div>
 
+  WPM (moving average): <span class="historicWpm"></span>
+  <div class="history-chart"></div>
   [extra stuff]
   Quote count: <span class="quoteCount"></span>
 </div>
@@ -31,4 +34,5 @@
 
 </body>
 <script type="text/javascript" src="test.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/chartist/0.11.0/chartist.min.js"></script>
 </html>
