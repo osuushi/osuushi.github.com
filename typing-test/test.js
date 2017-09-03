@@ -29,8 +29,13 @@ const maxQuotes = 3;
 let currentQuote;
 let quoteCount;
 
+let currentQuoteSamples = [];
+
 let gameState = 'loading';
 let startTime;
+
+const sampleRate = 200;
+setInterval(sampleWpm, sampleRate);
 
 async function initQuote () {
   gameState = 'loading';
@@ -38,11 +43,11 @@ async function initQuote () {
   let quote = await getQuote();
 
   gameState = 'typing';
+  currentQuoteSamples = [];
   startTime = null;
 
   setQuote(quote);
   typingArea.value = ''
-
 
   typingArea.value = '';
   typingArea.focus();
@@ -71,7 +76,19 @@ function resizeAreas () {
 }
 
 function drawCharts () {
+  drawCurrentChart();
   drawHistoryChart();
+}
+
+function drawCurrentChart () {
+  let samples = currentQuoteSamples;
+
+  Chartist.Line('.wpm-chart', {series: [samples]}, {height: '200px',
+    fullWidth: true,
+    showPoint: false,
+    axisX: {showGrid: false},
+    lineSmooth: Chartist.Interpolation.simple({divisor: 2, fillHoles: false}),
+  });
 }
 
 function drawHistoryChart () {
@@ -81,7 +98,7 @@ function drawHistoryChart () {
     wpms.push(msPerMinute * history.words[i] / history.times[i])
   }
 
-  Chartist.Line('.history-chart', {series: [wpms]}, {fullWidth: true});
+  Chartist.Line('.history-chart', {series: [wpms]}, {height: '200px', fullWidth: true});
 }
 
 function onInput (event) {
@@ -105,6 +122,16 @@ function updateStats () {
   statFields.quoteCount.textContent = quoteCount;
 
   statFields.historicWpm.textContent = computeHistoricWpm().toFixed(2);
+}
+
+// Interval function that collects wpms for drawing chart at end of test
+function sampleWpm () {
+  if (gameState !== 'typing') return;
+  if (startTime == null) return;
+  let wordCount = typingArea.value.length / charsPerWord;
+  if (wordCount < 1) return; // don't sample on first word; too skewed
+  let minutes = (Date.now() - startTime) / msPerMinute
+  currentQuoteSamples.push(wordCount/minutes);
 }
 
 function sum (arr) {
@@ -240,4 +267,5 @@ function loadHistory () {
   }
 }
 
+drawCharts()
 initQuote();
