@@ -156,16 +156,8 @@ function updateHighlight () {
   typingArea.classList.toggle('invalid', anyWrong);
 }
 
-let quoteRequestBody = new FormData;
-quoteRequestBody.append('method', 'getQuote');
-quoteRequestBody.append('format', 'json');
-quoteRequestBody.append('lang', 'en');
-
 async function fetchQuoteText () {
-  let response = await fetch('https://talaikis.com/api/quotes/random/', {
-    method: 'POST',
-    body: quoteRequestBody,
-  });
+  let response = await fetch('https://talaikis.com/api/quotes/random/', {method: 'GET'})
   // The api does a weird invalid escaping of apostrophes, so we have to fix it before we can parse
   let result = await response.json();
   let text = result.quote;
