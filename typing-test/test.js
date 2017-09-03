@@ -122,13 +122,21 @@ function inputWithoutPrewrapSpaces () {
 // that wrap will wrap in the input field before they're fully typed
 function addPrewrapSpaces () {
   let input = inputWithoutPrewrapSpaces();
-  // What's left of the current word (characters until next space/end)
-  let [wordRemainder] = currentQuote.slice(input.length).split(/\s/, 1);
-  let padding = new Array(wordRemainder.length).fill(noBreakSpace).join('');
-  let paddedInput = input + padding;
+  let paddedInput;
   let {selectionStart, selectionEnd, selectionDirection} = typingArea;
   selectionStart = Math.min(selectionStart, input.length);
   selectionEnd = Math.min(selectionEnd, input.length);
+
+  // hyphens wrap differently
+  if (input.slice(-1) === '-') {
+    paddedInput = input;
+  } else {
+    // What's left of the current word (characters until next space/hyphen/end)
+    let [wordRemainder] = currentQuote.slice(input.length).split(/[\s-]/, 1);
+    let padding = new Array(wordRemainder.length).fill(noBreakSpace).join('');
+    paddedInput = input + padding;
+  }
+
   if (paddedInput !== typingArea.value) {
     typingArea.value = paddedInput;
     Object.assign(typingArea, {selectionStart, selectionEnd, selectionDirection});
