@@ -33,7 +33,7 @@ body {
 
 .highlight.invalid {
   background-color: #FFF;
-  color: #FFF;
+  color: #CCC;
 }
 
 .highlight.valid {
