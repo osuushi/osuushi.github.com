@@ -5,7 +5,7 @@ statsEl = document.querySelector('.stats');
 const oneStrokeChars = /[a-z\d\s`=\[\];',\.\/\\-]/g
 
 statFields = {};
-for (let fieldName of ['wpm', 'cpm', 'quoteCount', 'historicWpm']) {
+for (let fieldName of ['wpm', 'cpm', 'quoteCount', 'historicWpm', 'totalWords']) {
   statFields[fieldName] = statsEl.querySelector('.' + fieldName);
 }
 
@@ -156,7 +156,6 @@ function fixSelection () {
 function updateStats () {
   if (gameState === 'complete') return;
 
-  // standardize word as
   let input = inputWithoutPrewrapSpaces();
   let charCount = input.length;
   let wordCount = countWords(input);
@@ -165,6 +164,7 @@ function updateStats () {
   statFields.wpm.textContent = (wordCount/minutes).toFixed(2);
   statFields.cpm.textContent = (charCount/minutes).toFixed(2);
   statFields.quoteCount.textContent = quoteCount;
+  statFields.totalWords.textContent = countWords(currentQuote).toFixed(2);
 
   statFields.historicWpm.textContent = computeHistoricWpm().toFixed(2);
 }
