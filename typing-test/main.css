@@ -22,18 +22,21 @@ body {
 .typing-area {
   position: absolute;
   top: 0;
-  background-color: rgba(255, 255, 255, 0.2)
+  background-color: transparent;
+  color: #000;
+  opacity: 0.5;
 }
 
 .typing-area.invalid {
-  background-color: rgba(255, 0, 0, 0.2);
+  background-color: rgba(255, 0, 0, 0.3);
 }
 
-.invalid {
-  background-color: #FF6662;
+.highlight.invalid {
+  background-color: #FFF;
+  color: #FFF;
 }
 
-.valid {
+.highlight.valid {
   background-color: #85FF50;
 }
 

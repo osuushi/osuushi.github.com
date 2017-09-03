@@ -237,7 +237,7 @@ function updateHighlight () {
     if (type == 'none') return '';
     switch(whichSnippet) {
       case 'prefix':
-        return `<span class="${type}">`;
+        return `<span class="highlight ${type}">`;
       case 'suffix':
         return '</span>';
       default:
@@ -253,7 +253,7 @@ function updateHighlight () {
     else if (actual == null) newType = 'none';
     else newType = 'invalid';
 
-    // Additional marking for the
+    // Additional marking for the whole text field
     if (newType === 'invalid') anyWrong = true;
 
     if (newType !== lastType) {
