@@ -2,6 +2,8 @@ quoteContent = document.querySelector('.quote-content');
 typingArea = document.querySelector('.typing-area');
 statsEl = document.querySelector('.stats');
 
+const oneStrokeChars = /[a-z\d\s`=\[\];',\.\/\\-]/g
+
 statFields = {};
 for (let fieldName of ['wpm', 'cpm', 'quoteCount', 'historicWpm']) {
   statFields[fieldName] = statsEl.querySelector('.' + fieldName);
@@ -21,9 +23,8 @@ const historyCap = 20;
 
 const msPerMinute = 60 * 1000;
 
-// Words are standardized to five keystrokes. To simplify, we define in terms
-// of characters, and assume that ~2% of characters involve two keystrokes.
-const charsPerWord = 5 / 1.02;
+// Standard definition of "word" is five keystrokes
+const keyStrokesPerWord = 5;
 
 // Minimum quote length; if the quote is shorter than this, get another one and tack it on.
 const minQuoteLength = 150;
@@ -149,7 +150,7 @@ function updateStats () {
   // standardize word as
   let input = inputWithoutPrewrapSpaces();
   let charCount = input.length;
-  let wordCount = charCount / charsPerWord;
+  let wordCount = countWords(input);
 
   let minutes = (Date.now() - startTime) / msPerMinute
   statFields.wpm.textContent = (wordCount/minutes).toFixed(2);
@@ -163,7 +164,7 @@ function updateStats () {
 function sampleWpm () {
   if (gameState !== 'typing') return;
   if (startTime == null) return;
-  let wordCount = inputWithoutPrewrapSpaces().length / charsPerWord;
+  let wordCount = countWords(inputWithoutPrewrapSpaces());
   if (wordCount < 1) return; // don't sample on first word; too skewed
   let minutes = (Date.now() - startTime) / msPerMinute
   currentQuoteSamples.push(wordCount/minutes);
@@ -184,7 +185,7 @@ function checkCompletion () {
 function onComplete () {
   gameState = 'complete';
   typingArea.classList.add('valid');
-  let words = currentQuote.length / charsPerWord;
+  let words = countWords(currentQuote);
   let time = Date.now() - startTime;
   history.words.push(words);
   history.times.push(time);
@@ -285,6 +286,17 @@ async function getQuote () {
   }
   quoteCount = parts.length;
   return parts.join(' ');
+}
+
+function countKeyStrokes (text) {
+  let count = text.length;
+  // filter out one-stroke characters
+  let doubleStrokes = text.replace(oneStrokeChars, '');
+  return count + doubleStrokes.length;
+}
+
+function countWords (text) {
+  return countKeyStrokes(text) / keyStrokesPerWord;
 }
 
 function saveHistory () {
