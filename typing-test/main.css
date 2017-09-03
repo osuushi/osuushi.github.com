@@ -1,0 +1,33 @@
+body {
+  position: relative;
+  width: 700px;
+  margin: 20px auto;
+}
+
+.quote-content {
+  white-space: pre-wrap;
+  overflow: auto;
+  margin-bottom: 10px;
+}
+
+.quote-content, .typing-area {
+  width: 100%;
+  font-family: "Courier New", Courier;
+  font-size: 24px;
+}
+
+.invalid {
+  background-color: #FF6662;
+}
+
+.valid {
+  background-color: #85FF50;
+}
+
+.instructons {
+  font-family: CenturyGothic
+}
+
+.stats {
+  white-space: pre-line;
+}
