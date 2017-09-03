@@ -10,6 +10,11 @@ for (let fieldName of ['wpm', 'cpm', 'quoteCount', 'historicWpm']) {
 typingArea.oninput = onInput;
 typingArea.onkeydown = onKeyDown;
 
+// If anything is going to change the selection, on the next tick we have to repair it because of prewrap spaces
+typingArea.onselect = typingArea.onclick = typingArea.onmousedown = () => setTimeout(fixSelection, 0);
+
+let noBreakSpace = ' ';
+
 let history;
 loadHistory();
 const historyCap = 20;
@@ -48,9 +53,8 @@ async function initQuote () {
 
   setQuote(quote);
   typingArea.value = ''
-
-  typingArea.value = '';
   typingArea.focus();
+
   typingArea.classList.remove('invalid');
   typingArea.classList.remove('valid');
 }
@@ -103,16 +107,47 @@ function drawHistoryChart () {
 
 function onInput (event) {
   if (gameState === 'typing' && startTime == null) startTime = Date.now();
+  addPrewrapSpaces();
   updateHighlight();
   updateStats();
   checkCompletion();
+}
+
+function inputWithoutPrewrapSpaces () {
+  return typingArea.value.replace(new RegExp(noBreakSpace, 'g'), '');
+}
+
+// Padd non-breaking spaces for the current word, ensuring that long words
+// that wrap will wrap in the input field before they're fully typed
+function addPrewrapSpaces () {
+  let input = inputWithoutPrewrapSpaces();
+  // What's left of the current word (characters until next space/end)
+  let [wordRemainder] = currentQuote.slice(input.length).split(/\s/, 1);
+  let padding = new Array(wordRemainder.length).fill(noBreakSpace).join('');
+  let paddedInput = input + padding;
+  let {selectionStart, selectionEnd, selectionDirection} = typingArea;
+  selectionStart = Math.min(selectionStart, input.length);
+  selectionEnd = Math.min(selectionEnd, input.length);
+  if (paddedInput !== typingArea.value) {
+    typingArea.value = paddedInput;
+    Object.assign(typingArea, {selectionStart, selectionEnd, selectionDirection});
+  }
+}
+
+// Selection past end is possible because of prewrap spaces; this fixes that to make the prewrap spaces invisible
+function fixSelection () {
+  let input = inputWithoutPrewrapSpaces();
+  let {selectionStart, selectionEnd, selectionDirection} = typingArea;
+  selectionStart = Math.min(selectionStart, input.length);
+  selectionEnd = Math.min(selectionEnd, input.length);
+  Object.assign(typingArea, {selectionStart, selectionEnd, selectionDirection});
 }
 
 function updateStats () {
   if (gameState === 'complete') return;
 
   // standardize word as
-  let input = typingArea.value;
+  let input = inputWithoutPrewrapSpaces();
   let charCount = input.length;
   let wordCount = charCount / charsPerWord;
 
@@ -128,7 +163,7 @@ function updateStats () {
 function sampleWpm () {
   if (gameState !== 'typing') return;
   if (startTime == null) return;
-  let wordCount = typingArea.value.length / charsPerWord;
+  let wordCount = inputWithoutPrewrapSpaces().length / charsPerWord;
   if (wordCount < 1) return; // don't sample on first word; too skewed
   let minutes = (Date.now() - startTime) / msPerMinute
   currentQuoteSamples.push(wordCount/minutes);
@@ -143,7 +178,7 @@ function computeHistoricWpm () {
 }
 
 function checkCompletion () {
-  if (typingArea.value === currentQuote && gameState !== 'complete') onComplete();
+  if (inputWithoutPrewrapSpaces() === currentQuote && gameState !== 'complete') onComplete();
 }
 
 function onComplete () {
@@ -174,6 +209,7 @@ function onKeyDown (event) {
       break;
   }
   if (gameState === 'complete') event.preventDefault();
+  setTimeout(fixSelection, 0);
 }
 
 function escapeChar (char) {
@@ -185,7 +221,7 @@ function escapeChar (char) {
 function updateHighlight () {
   let parts = [];
   let lastType = 'none';
-  let input = typingArea.value;
+  let input = inputWithoutPrewrapSpaces();
   let anyWrong = false;
 
   let getSnippet = function (type, whichSnippet) {
