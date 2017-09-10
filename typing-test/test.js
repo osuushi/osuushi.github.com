@@ -399,4 +399,4 @@ function loadHistory () {
 }
 
 drawCharts()
-initQuote('This is a test');
+initQuote();
