@@ -4,6 +4,9 @@ statsEl = document.querySelector('.stats');
 
 const oneStrokeChars = /[a-z\d\s`=\[\];',\.\/\\-]/g
 
+// Minimum number of characters of context before an error (always snaps to a word)
+const ERROR_CONTEXT = 8
+
 statFields = {};
 for (let fieldName of ['wpm', 'cpm', 'quoteCount', 'historicWpm', 'totalWords']) {
   statFields[fieldName] = statsEl.querySelector('.' + fieldName);
@@ -298,8 +301,8 @@ function collectErrors () {
   }
   if (firstErrorIndex < 0) return; // no errors
 
-  // If the first error is a space, go back more;
-  if (currentQuote[firstErrorIndex] === ' ') firstErrorIndex--;
+  // Add context to error
+  firstErrorIndex -= ERROR_CONTEXT;
 
   let lastSpaceIndex = currentQuote.lastIndexOf(' ', firstErrorIndex);
 
