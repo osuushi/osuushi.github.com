@@ -40,14 +40,24 @@ let currentQuoteSamples = [];
 let gameState = 'loading';
 let startTime;
 
+// Collection of typing errors, including some context. This is used to
+// generate the "quote" for error reduction practice.
+let errors = [];
+
 const sampleRate = 200;
 setInterval(sampleWpm, sampleRate);
 
-async function initQuote () {
-  gameState = 'loading';
-  typingArea.value = ''
-  quoteContent.textContent = 'Loading…'
-  let quote = await getQuote();
+async function initQuote (quote) {
+  // quote can be passed in for practice mode
+  if (!quote) {
+    gameState = 'loading';
+    typingArea.value = ''
+    quoteContent.textContent = 'Loading…'
+    quote = await getQuote();
+  }
+
+  // Reset errors
+  errors = [];
 
   gameState = 'typing';
   currentQuoteSamples = [];
@@ -113,6 +123,7 @@ function onInput (event) {
   updateHighlight();
   updateStats();
   checkCompletion();
+  collectErrors();
 }
 
 function inputWithoutPrewrapSpaces () {
@@ -209,6 +220,10 @@ function onComplete () {
 
 function onKeyDown (event) {
   switch(event.keyCode) {
+    case 9: // tab, for error practice mode
+      initQuote(getPracticeQuote());
+      event.preventDefault();
+      break;
     case 27: // esc
       initQuote();
       event.preventDefault();
@@ -270,6 +285,62 @@ function updateHighlight () {
   typingArea.classList.toggle('invalid', anyWrong);
 }
 
+// If there are currently errors, collect them up, going back to the first
+// word boundary before the error.
+function collectErrors () {
+  let input = inputWithoutPrewrapSpaces();
+  let firstErrorIndex = -1;
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] !== currentQuote[i]) {
+      firstErrorIndex = i;
+      break;
+    }
+  }
+  if (firstErrorIndex < 0) return; // no errors
+
+  // If the first error is a space, go back more;
+  if (currentQuote[firstErrorIndex] === ' ') firstErrorIndex--;
+
+  let lastSpaceIndex = currentQuote.lastIndexOf(' ', firstErrorIndex);
+
+  lastSpaceIndex = Math.max(0, lastSpaceIndex);
+
+  errors.push(input.slice(lastSpaceIndex));
+}
+
+// Compile all errors into a new quote, for error reduction practice
+function getPracticeQuote () {
+  // Filter out all errors that are prefixes of other errors. This algorithm
+  // is naive and O(M*N^2), where M is error length, and N is the number of
+  // errors. Not very efficient, but M and N are relatively small.
+
+  // First unique the errors, and store their indexes
+  let indexMap = {};
+  for (let i = 0; i < errors.length; i++) {
+    let trimmed = errors[i].trim();
+    if (trimmed in indexMap) continue;
+    indexMap[trimmed] = i;
+  }
+  let uniqueErrors = Object.keys(indexMap);
+
+  // sort and reverse unique errors so that we will always see prefixes first
+  // (reverse because we're popping)
+  uniqueErrors.sort().reverse();
+  let filteredErrors = [];
+  while (uniqueErrors.length) {
+    let e = uniqueErrors.pop();
+    // If no other error starts with e, keep it
+    if (!uniqueErrors.some(other => other.startsWith(e))) {
+      filteredErrors.push(e);
+    }
+  }
+
+  // Restore original indexes
+  filteredErrors.sort((a, b) => indexMap[a] - indexMap[b]);
+
+  return filteredErrors.join(' ').replace(/\s+/g, ' ');
+}
+
 async function fetchQuoteText () {
   let response = await fetch('https://talaikis.com/api/quotes/random/', {method: 'GET'})
   // The api does a weird invalid escaping of apostrophes, so we have to fix it before we can parse
@@ -325,4 +396,4 @@ function loadHistory () {
 }
 
 drawCharts()
-initQuote();
+initQuote('This is a test');
