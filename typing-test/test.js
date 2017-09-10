@@ -51,18 +51,20 @@ const sampleRate = 200;
 setInterval(sampleWpm, sampleRate);
 
 async function initQuote (quote) {
+  // Reset errors
+  errors = [];
   // quote can be passed in for practice mode
-  if (!quote) {
+  if (quote) {
+    gameState = 'practice';
+  } else {
     gameState = 'loading';
     typingArea.value = ''
     quoteContent.textContent = 'Loading…'
     quote = await getQuote();
+    gameState = 'typing';
   }
 
-  // Reset errors
-  errors = [];
 
-  gameState = 'typing';
   currentQuoteSamples = [];
   startTime = null;
 
@@ -121,7 +123,8 @@ function drawHistoryChart () {
 }
 
 function onInput (event) {
-  if (gameState === 'typing' && startTime == null) startTime = Date.now();
+  if ((gameState === 'typing' || gameState === 'practice')
+    && startTime == null) startTime = Date.now();
   addPrewrapSpaces();
   updateHighlight();
   updateStats();
@@ -205,9 +208,7 @@ function checkCompletion () {
   if (inputWithoutPrewrapSpaces() === currentQuote && gameState !== 'complete') onComplete();
 }
 
-function onComplete () {
-  gameState = 'complete';
-  typingArea.classList.add('valid');
+function updateHistory () {
   let words = countWords(currentQuote);
   let time = Date.now() - startTime;
   history.words.push(words);
@@ -215,6 +216,16 @@ function onComplete () {
   if (history.words.length > historyCap) {
     history.words.shift();
     history.times.shift();
+  }
+}
+
+function onComplete () {
+  let oldState = gameState;
+  gameState = 'complete';
+  typingArea.classList.add('valid');
+
+  if (oldState !== 'practice') {
+    updateHistory();
   }
   saveHistory();
   updateStats();
