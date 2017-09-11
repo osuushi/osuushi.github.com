@@ -5,10 +5,10 @@ statsEl = document.querySelector('.stats');
 const oneStrokeChars = /[a-z\d\s`=\[\];',\.\/\\-]/g
 
 // Minimum number of characters of context before an error (always snaps to a word)
-const ERROR_CONTEXT = 8
+const ERROR_CONTEXT = 16
 
 statFields = {};
-for (let fieldName of ['wpm', 'cpm', 'quoteCount', 'historicWpm', 'totalWords']) {
+for (let fieldName of ['wpm', 'cpm', 'quoteCount', 'historicWpm', 'totalWords', 'bestWpm']) {
   statFields[fieldName] = statsEl.querySelector('.' + fieldName);
 }
 
@@ -184,6 +184,7 @@ function updateStats () {
   statFields.totalWords.textContent = countWords(currentQuote).toFixed(2);
 
   statFields.historicWpm.textContent = computeHistoricWpm().toFixed(2);
+  statFields.bestWpm.textContent = (history.speedRecord * msPerMinute).toFixed(2);
 }
 
 // Interval function that collects wpms for drawing chart at end of test
@@ -213,6 +214,7 @@ function updateHistory () {
   let time = Date.now() - startTime;
   history.words.push(words);
   history.times.push(time);
+  history.speedRecord = Math.max(words / time, history.speedRecord || 0);
   if (history.words.length > historyCap) {
     history.words.shift();
     history.times.shift();
