@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
+
+    <title>Flippety-Split!</title>
+  </head>
+  <body>
+    <div id="loading">
+      Loading...
+    </div>
+    <script src="wasm_exec.js"></script>
+    <script>
+      if (!WebAssembly.instantiateStreaming) { // polyfill
+        WebAssembly.instantiateStreaming = async (resp, importObject) => {
+          const source = await (await resp).arrayBuffer();
+          return await WebAssembly.instantiate(source, importObject);
+        };
+      }
+
+      const go = new Go();
+      let mod, inst;
+
+      WebAssembly.instantiateStreaming(fetch("lib.wasm"), go.importObject).then((result) => {
+        mod = result.module;
+        inst = result.instance;
+        go.run(inst);
+      });
+    </script>
+  </body>
+</html>
