@@ -4,7 +4,7 @@ Smooth.js version 0.1.5
 
 Turn arrays into smooth functions.
 
-Copyright 2012 Spencer Cohen
+Copyright 2012 Ada Cohen
 Licensed under MIT license (see "Smooth.js MIT license.txt")
 */
 
