@@ -24,12 +24,13 @@ official number.
 So the thought struck me recently that a small set of calipers on a keychain
 would be super useful. I went on Amazon, and found a bunch of listings for cheap
 little metal calipers. Unfortunately, I ordered some, and immediately found that
-they're basically toys. They're off by over a millimeter, which makes them
-pretty useless, since they only measure a range of 0-30 millimeters in the first
-place. And once I had them in my hand, it was clear that a keychain that _looks_
-like a tiny scale model of a set of calipers is silly. All of the keychains I
-found were like this: more of a cheap novelty than something intended to be
-useful.
+they're basically toys. They're offset by over a millimeter, and the markings
+aren't _quite_ a millimeter apart even after you account for the offset, which
+makes them pretty useless, since they only measure a range of 0-30 millimeters
+in the first place. And once I had them in my hand, it was clear that a keychain
+that _looks_ like a tiny scale model of a set of calipers is silly. All of the
+keychains I found were like this: more of a cheap novelty than something
+intended to be useful.
 
 I also realized that a functional calipers keychain doesn't need to be _that_
 small. People regularly carry around things like access cards on their
