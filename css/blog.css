@@ -112,3 +112,7 @@ code {
 	vertical-align: .1em;
 	margin-bottom: -6px;
 }
+
+img {
+	max-width: 100%;
+}
