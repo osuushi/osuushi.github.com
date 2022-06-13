@@ -5,7 +5,7 @@ title: Keychain Calipers
 
 ![Hero shot of calipers in hand](/images/2022-06-12/hero.jpg)
 
-I've been doing a lot of projects with making physical objects lately,
+I've been doing a lot of projects in the physical, non-code world lately,
 especially with 3D printing. It's gotten to the point where any time I encounter
 a problem, my first thought is "How can I 3D print my way out of this?" As a
 result, I'm constantly reaching for my trusty metal electronic calipers and
