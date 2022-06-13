@@ -57,7 +57,7 @@ is that number. For example, this is what 24 mm looks like:
 
 ![Keychain calipers showing 24 mm](/images/2022-06-12/calipers-24.jpg)
 
-If the best aligned marking is on the left side, then add 0.5mm to the digit
+If the best aligned marking is across the rail, then add 0.5mm to the digit
 across from it. So this is what 36.5 mm looks like:
 
 ![Keychain calipers showing 36.5 mm](/images/2022-06-12/calipers-36-5.jpg)
