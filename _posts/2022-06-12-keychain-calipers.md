@@ -67,7 +67,8 @@ are two markings that kind of match. The measurement will be somewhere in
 between those. I'll tend to vaguely guess at around quarter millimeter
 increments in these cases, but don't expect to get too much precision. These are
 plastic, 3D printed calipers, so they're a little flexible, and they're not
-designed to ultra-tight tolerances.
+designed to ultra-tight tolerances. Good enough to sketch something out and
+refine it later, but not a substitute for a good set of calipers.
 
 ## Features
 
