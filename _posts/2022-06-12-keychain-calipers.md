@@ -69,6 +69,14 @@ increments in these cases, but don't expect to get too much precision. These are
 plastic, 3D printed calipers, so they're a little flexible, and they're not
 designed to ultra-tight tolerances.
 
+## Features
+
+In addition to the well-known inner and outer jaws, you can also use these
+calipers to measure height (a pretty typical, but slightly lesser known feature
+of many calipers). Here they are measuring the height of my digital calipers:
+
+![Keychain calipers showing height](/images/2022-06-12/calipers-height.jpg)
+
 # Design
 
 So why did I design them this way, rather than just putting millimeter markings
@@ -137,13 +145,18 @@ So what if we chop up our vernier scale into three pieces like this?
 
 Now we can move these pieces wherever we want, and as long as we stick to a
 multiple of 10 mm, the vernier will still work. So we shift them over to all fit
-within the same 3 cm range, like so:
+within the same 3 cm range. This is easiest to demonstrate with an interactive
+demo:
 
-![A vernier scale chopped into pieces ang aligned](/images/2022-06-12/vernier-aligned.png)
+<script src="/js/2022-06-12/vernier-demo.js"></script>
 
-You might notice that if you read the numbers from left to right, they're in the
-same order as they appear on my vernier. I've taken these three vernier scale
-segments, and overlaid them to fit within a smaller range.
+Move the slider to shift the verniers along the main scale. The "normal" vernier
+scale is directly above the main scale, with the chopped up verniers above. When
+a vernier marking lines up with a main scale marking, both are highlighted.
+
+Notice that if you read the numbers on the chopped scales from left to right,
+they're in the same order as they appear on my vernier. I've taken these three
+vernier scale segments, and overlaid them to fit within a smaller range.
 
 I'm guessing I'm not the first to invent this kind of "chopped up" vernier
 scale, but I couldn't find any prior art for it. I'd bet that a description of
@@ -166,7 +179,7 @@ really unambiguous alignment, and the half-markings make that happen more often.
 
 I went through several iterations on the slider. My initial design had it as a
 single print with supports, but it's very difficult to get it to both fit
-snuggly, and run smoothly along the body that way. It's also horrible to try to
+snugly, and run smoothly along the body that way. It's also horrible to try to
 get support material out of that part.
 
 The slot-and-rail design is set up to keep the vernier system as flat as
@@ -214,7 +227,7 @@ The face plate is a pretty straightforward print, which requires no intervention
 other than filament changes. There will be two color changes here, which will
 look like this:
 
-![Color swaps for the face plate](/images/2022-06-12/plate-colors.png)
+![Color swaps for the face plate](/images/2022-06-12/plate-colors.jpg)
 
 Start this print with black, then switch to orange, then switch back to black.
 
@@ -225,12 +238,12 @@ insert the face plate mid-print.
 
 This has a single filament and a pause, like so:
 
-![Color swaps for the slider](/images/2022-06-12/slider-colors.png)
+![Color swaps for the slider](/images/2022-06-12/slider-colors.jpg)
 
 I've truncated the preview for this print right after the pause, so you can see
 where it happens. This is what the print will look like right before the pause:
 
-![Slider print before pause](/images/2022-06-12/slider-before.png)
+![Slider print before pause](/images/2022-06-12/slider-before.jpg)
 
 During this pause, you're going to press the face plate into place, number side up, so
 that those pegs go through the holes in the plate. This does not have to be
@@ -247,7 +260,7 @@ For this print, start with black, then switch to orange.
 
 The body is also a pretty simple print, with two color swaps:
 
-![Color swaps for the body](/images/2022-06-12/body-colors.png)
+![Color swaps for the body](/images/2022-06-12/body-colors.jpg)
 
 Start with orange, switch to black, and then switch back to orange.
 
