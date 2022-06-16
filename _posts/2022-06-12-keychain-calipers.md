@@ -174,7 +174,8 @@ pocket.
 There's nothing particularly special going on with the half-markings. They're
 just shifted by 0.5 mm. It's just a separate vernier scale with an offset. The
 reason I've included them is that the vernier effect works best when there's a
-really unambiguous alignment, and the half-markings make that happen more often.
+really unambiguous alignment, so the half-markings ensure that there's always a
+close match.
 
 ## Enough about the verniers, what is going on with that faceplate design?
 
